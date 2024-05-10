@@ -10,10 +10,48 @@
       </div>
   </div>
 
+  <!-- 각 카드 실행 -->
+  <div class="container-fluid">
+    <div class="col-md-12 mt-3">
+      <div class="row fw-bold text-center">
+      </div>
+        <div class="row mt-3">
+      <div class="card col-lg-3 col-md-6" v-for = "attraction in mainAttractionList" :key="attraction.id">
+      <div class="card-img-wrapper mt-2">
+        <img :src="attraction.firstImage" class="card-img-top img-fluid" alt="" 
+        onerror="this.onerror=null; this.src='src/assets/noimg.jpg'" >
+      </div>
+      <div class="card-body">
+          <h5 class="card-title">{{attraction.title}}</h5>
+          <p class="card-text">{{attraction.addr1 + attraction.addr2}}</p>
+          
+          <!-- 고유한 모달 ID를 data-target에 설정 -->
+          <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="{{}}">
+              더보기
+          </button>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 </template>
 
 <script setup>
+import { ref } from "vue"
+import axios from "axios";
 
+const mainAttractionList = ref([]);
+
+axios.get("http://localhost/")
+  .then(({ data }) => {
+    mainAttractionList.value = data;
+    console.log(mainAttractionList)
+  })
+  .catch((error) => {
+    alert(error)
+  })
 </script>
 <style scope>
 

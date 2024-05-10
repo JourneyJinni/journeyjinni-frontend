@@ -6,7 +6,6 @@ import LocalAttractionList from "@/components/LocalAttracionList.vue";
 <template>
 
   <div>
-    <h1>메인 페이지</h1>
     <MainPhoto/>
     <LocalAttractionList/>
 
