@@ -1,44 +1,63 @@
 <template>
-    <div>
-      <!-- 하위 컴포넌트에 지역과 카테고리 정보 전달 -->
+<br><br><br>
+<div class="rounded p-3 bg-light shadow d-flex align-items-center justify-content-between"> <!-- 모든 공간을 사용하면서 가로로 정렬합니다. -->
+  <CheckBoxView :items="cities" v-model:selected="selectedCities" label="지역" />
 
-      <!-- 검색 버튼 -->
-      <button @click="searchResults">검색</button>
-      <!-- 검색 결과 -->
-    </div>
+  <CheckBoxView :items="categories" v-model:selected="selectedCategories" label="카테고리" />
+</div>
+    
+
+    <button @click="searchResults">검색</button>
 </template>
-  
+
+
 <script setup>
-  import { ref, onMounted } from 'vue';
-  import { cityInfo } from '@/api/board';
- // import SearchResults from './SearchResults.vue'; // 하위 컴포넌트
+import { ref, onMounted } from 'vue';
+import { cityInfo, categoryInfo } from '@/api/board';
+import CheckBoxView from '@/views/CheckBoxView.vue';
 
- onMounted(() => {
-  getArticleInfo();
- });
+onMounted(() => {
+  getCity();
+  getCategory();
+});
 
-  const categories = ref([/* 초기 카테고리 데이터 */]);
-  const selectedRegions = ref([]);
-  const selectedCategories = ref([]);
-  const results = ref([]);
+const cities = ref([]);
+const categories = ref([]);
+const selectedCities = ref([]);
+const selectedCategories = ref([]);
 
-
-
-const cities = ref([/* 초기 지역 데이터 */]);
-const citycodes = ref([/* 초기 지역 데이터 */]);
-const getArticleInfo = () => {
+const getCity = () => {
   cities
   cityInfo(
     ({ data }) => {
       console.log("response 객체 : " + data)
       cities.value = data;
-      console.log("서버에서 정보목록 얻어오자1!!!", cities.value);
+      console.log("cities = " , cities.value);
     },
     (error) => {
-      console.log("error 발생! " + error);
+      console.log("city 정보 error 발생! " + error);
     }
-    );
+  );
 };
 
+const getCategory = () => {
+  categoryInfo(
+    ({ data }) => {
+      console.log("response 객체 : " + data)
+      categories.value = data;
+      console.log("categories = ", categories.value);
+    },
+    (error) => {
+      console.log("category 정보 error 발생! " + error);
+    }
+  );
+};
+
+
+const searchResults = () => {
+  // 선택된 지역과 카테고리에 따른 검색 결과를 처리하는 함수
+  console.log("선택된 지역:", selectedCities);
+  console.log("선택된 카테고리:", selectedCategories);
+  // 검색 결과를 처리하는 로직을 추가
+};
 </script>
-  
