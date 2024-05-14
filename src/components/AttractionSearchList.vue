@@ -1,5 +1,5 @@
 <script setup>
-import axios from 'axios';
+import axios from "axios";
 
 const props = defineProps({
   sido: String,
@@ -7,6 +7,13 @@ const props = defineProps({
   attractionType: String
 })
 
+axios.post("http://localhost//filterlist", props)
+  .then((response) => {
+  console.log("성공")
+  })
+  .catch((error) => {
+  console.log("실패")
+})
 
 
 </script>
