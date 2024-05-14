@@ -1,4 +1,5 @@
-import AttractionMain from '@/components/AttractionMain.vue';
+
+import AttractionSearchView from '@/views/AttractionSearchView.vue';
 import MainPageView from '@/views/MainPageView.vue';
 
 import { createRouter, createWebHistory } from 'vue-router';
@@ -15,7 +16,7 @@ const router = createRouter({
     {
       path: '/attraction',
       name: 'attraction',
-      component: AttractionMain,
+      component: AttractionSearchView,
     }
 
   ]
