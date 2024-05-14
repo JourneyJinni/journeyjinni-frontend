@@ -26,7 +26,7 @@
 
           <ul class="navbar-nav ms-auto me-2" id="logout-nav">
             <li class="nav-item">
-              <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">로그인</a>
+              <router-link :to="{name : 'login'}" class="nav-link">로그인</router-link>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#signupModal">회원가입</a>

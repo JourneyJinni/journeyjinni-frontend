@@ -12,7 +12,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { cityInfo, categoryInfo } from '@/api/board';
+import { cityInfo, categoryInfo } from '@/api/attraction';
 import CheckBoxView from '@/views/CheckBoxView.vue';
 
 onMounted(() => {
