@@ -1,4 +1,5 @@
 import AttractionMain from '@/components/AttractionMain.vue';
+import LoginView from '@/views/LoginView.vue';
 import MainPageView from '@/views/MainPageView.vue';
 
 import { createRouter, createWebHistory } from 'vue-router';
@@ -16,6 +17,12 @@ const router = createRouter({
       path: '/attraction',
       name: 'attraction',
       component: AttractionMain,
+    }
+    ,
+    {
+      path: '/login',
+      name: 'login',
+      component: LoginView,
     }
 
   ]
