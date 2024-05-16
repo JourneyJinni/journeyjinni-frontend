@@ -84,7 +84,6 @@ import {
 
 const token = computed(() => {
   console.log("token : ", sessionStorage.getItem("accessToken"));
-  confirmToken();
   console.log("validToken : ", memberStore.isValidToken);
   return sessionStorage.getItem("accessToken") !== null && memberStore.isValidToken;
 });

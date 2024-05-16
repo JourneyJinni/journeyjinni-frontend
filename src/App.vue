@@ -8,6 +8,13 @@
 
 <script setup>
 import MainHeader from "@/components/MainHeader.vue";
+import { useMemberStore } from './stores/member';
+
+const { getUserInfo } = useMemberStore()
+
+console.log("최초 접속으로 유저 정보 불러오기!")
+getUserInfo(sessionStorage.getItem("accessToken"));
+
 </script>
 
 <style scoped>

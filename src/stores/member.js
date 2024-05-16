@@ -43,7 +43,7 @@ export const useMemberStore = defineStore("memberStore", () => {
 
   const getUserInfo = async (token) => {
     let decodeToken = jwtDecode(token)
-    console.log(decodeToken)
+    console.log("getUserInfo에 들어옴" , decodeToken)
     await findById(
       decodeToken.userId,
       (response) => {
@@ -57,13 +57,13 @@ export const useMemberStore = defineStore("memberStore", () => {
       },
       async (error) => {
         console.error(
-          "g[토큰 만료되어 사용 불가능.] : ",
+          "getUserInfo[토큰 만료되어 사용 불가능.] : ",
           error.response.status,
           error.response.statusText
         )
         isValidToken.value = false
 
-        await tokenRegenerate()
+        await tokenRegenerate(sessionStorage.getItem("refreshToken"))
       }
     )
   }
@@ -83,23 +83,26 @@ export const useMemberStore = defineStore("memberStore", () => {
       async (error) => {
         console.log("잘못된 토큰!")
         console.error(
-          "g[토큰 만료되어 사용 불가능.] : ",
+          "confirmToken[토큰 만료되어 사용 불가능.] : ",
           error.response.status,
           error.response.statusText
         )
         isValidToken.value = false
 
-        await tokenRegenerate()
+        await tokenRegenerate(sessionStorage.getItem("refreshToken"))
       }
     )
   }
 
-  const tokenRegenerate = async () => {
+  const tokenRegenerate = async (refreshToken) => {
+    let decodeToken = jwtDecode(refreshToken)
+    console.log("토큰을 재생성! " , decodeToken.userId)
     await tokenRegeneration(
-      JSON.stringify(userInfo.value),
+      decodeToken.userId,
       (response) => {
         if (response.status === httpStatusCode.CREATE) {
           let accessToken = response.data["access-token"]
+          userInfo.value = response.data.userInfo
           sessionStorage.setItem("accessToken", accessToken)
           isValidToken.value = true
         }
