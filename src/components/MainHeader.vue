@@ -36,7 +36,7 @@
                 <a class="nav-link" href="#" id="logout" @click="userLogout()">로그아웃</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">마이페이지</a>
+                <router-link :to="{name : 'mypage'}" class="nav-link">마이페이지</router-link>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">내 정보</a>
