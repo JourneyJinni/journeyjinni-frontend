@@ -13,6 +13,11 @@ async function findById(userid, success, fail) {
   await local.get(`/user/info/${userid}`).then(success).catch(fail);
 }
 
+async function tokenConfirm(success, fail) {
+  local.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
+  await local.get(`/user/token_confirm`).then(success).catch(fail);
+}
+
 // 토큰 등록
 async function tokenRegeneration(user, success, fail) {
   local.defaults.headers["refreshToken"] = sessionStorage.getItem("refreshToken"); //axios header에 refresh-token 셋팅
@@ -25,4 +30,4 @@ async function logout(userid, success, fail) {
   await local.get(`/user/logout/${userid}`).then(success).catch(fail);
 }
 
-export { userConfirm, findById, tokenRegeneration, logout };
+export { userConfirm, findById, tokenConfirm, tokenRegeneration, logout };

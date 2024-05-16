@@ -3,7 +3,7 @@ import { useRouter } from "vue-router"
 import { defineStore } from "pinia"
 import { jwtDecode } from "jwt-decode"
 
-import { userConfirm, findById, tokenRegeneration, logout } from "@/api/user"
+import { userConfirm, findById, tokenConfirm, tokenRegeneration, logout } from "@/api/user"
 import { httpStatusCode } from "@/util/http-status"
 
 export const useMemberStore = defineStore("memberStore", () => {
@@ -48,11 +48,39 @@ export const useMemberStore = defineStore("memberStore", () => {
       (response) => {
         if (response.status === httpStatusCode.OK) {
           userInfo.value = response.data.userInfo
+          isValidToken.value = true
+        } else {
+          isValidToken.value = false
+          console.log("유저 정보 없음!!!!")
+        }
+      },
+      async (error) => {
+        console.error(
+          "g[토큰 만료되어 사용 불가능.] : ",
+          error.response.status,
+          error.response.statusText
+        )
+        isValidToken.value = false
+
+        await tokenRegenerate()
+      }
+    )
+  }
+
+  const confirmToken = async () => {
+    console.log("confirmToken에 들어옴...")
+    await tokenConfirm(
+      (response) => {
+        if (response.status === 202) {
+          console.log("올바른 토큰!")
+          userInfo.value = response.data.userInfo
+          isValidToken.value = true
         } else {
           console.log("유저 정보 없음!!!!")
         }
       },
       async (error) => {
+        console.log("잘못된 토큰!")
         console.error(
           "g[토큰 만료되어 사용 불가능.] : ",
           error.response.status,
@@ -104,27 +132,7 @@ export const useMemberStore = defineStore("memberStore", () => {
     )
   }
 
-  // const userLogout = async () => {
-  //   console.log("로그아웃 아이디 : " + userInfo.value.userId)
-  //   await logout(
-  //     userInfo.value.userId,
-  //     (response) => {
-  //       if (response.status === httpStatusCode.OK) {
-  //         isLogin.value = false
-  //         userInfo.value = null
-  //         isValidToken.value = false
 
-  //         sessionStorage.removeItem("accessToken")
-  //         sessionStorage.removeItem("refreshToken")
-  //       } else {
-  //         console.error("유저 정보 없음!!!!")
-  //       }
-  //     },
-  //     (error) => {
-  //       console.log(error)
-  //     }
-  //   )
-  // }
 
   return {
     isLogin,
@@ -134,6 +142,6 @@ export const useMemberStore = defineStore("memberStore", () => {
     userLogin,
     getUserInfo,
     tokenRegenerate,
-    // userLogout,
+    confirmToken
   }
 })
