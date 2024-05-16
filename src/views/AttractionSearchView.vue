@@ -15,11 +15,13 @@ const selectedSido = ref();
 const selectedGugun = ref();
 const selectedAttractionType = ref();
 
+
 const searchStart = () => {
+  isSearch.value = false;
+  isSearch.value = true;
+  selectedAttractionType.value = attractionType.value;
   selectedSido.value = sido.value;
   selectedGugun.value = gugun.value;
-  selectedAttractionType.value = attractionType.value;
-  isSearch.value = true;
 }
 
 axios.get("http://localhost/getcity")
@@ -75,14 +77,12 @@ axios.get("http://localhost/getcategory")
             <input id="search-keyword" class="form-control form-control-lg me-5" type="search" placeholder="검색어"
                 aria-label="검색어" />
                 <button id="btn-search" class="btn btn-outline-success" type="button" @click='searchStart'>검색</button>
+            
           </form>
-          <AttractionSearchList v-if="isSearch" :sido="selectedSido" :gugun="selectedGugun" :attraction-type='selectedAttractionType'/>
-        
         <!-- kakao map end -->
-        
         <!-- 관광지 검색 end -->
     </div>
-    
+    <AttractionSearchList v-if="isSearch" :sido="selectedSido" :gugun="selectedGugun" :attraction-type='selectedAttractionType'/>
 </template>
 
 <style scoped>
