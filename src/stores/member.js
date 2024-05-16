@@ -26,6 +26,7 @@ export const useMemberStore = defineStore("memberStore", () => {
           isLogin.value = true
           isLoginError.value = false
           isValidToken.value = true
+          userInfo.value = response.data.userInfo
           sessionStorage.setItem("accessToken", accessToken)
           sessionStorage.setItem("refreshToken", refreshToken)
         }
@@ -132,7 +133,27 @@ export const useMemberStore = defineStore("memberStore", () => {
     )
   }
 
+  const userLogout = async () => {
+    console.log("로그아웃 아이디 : " + userInfo.value.user_id)
+    await logout(
+      userInfo.value.user_id,
+      (response) => {
+        if (response.status === httpStatusCode.OK) {
+          isLogin.value = false
+          userInfo.value = null
+          isValidToken.value = false
 
+          sessionStorage.removeItem("accessToken")
+          sessionStorage.removeItem("refreshToken")
+        } else {
+          console.error("유저 정보 없음!!!!")
+        }
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
 
   return {
     isLogin,
@@ -142,6 +163,7 @@ export const useMemberStore = defineStore("memberStore", () => {
     userLogin,
     getUserInfo,
     tokenRegenerate,
+    userLogout,
     confirmToken
   }
 })
