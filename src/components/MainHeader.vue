@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-sm shadow bg-light navbar-light sticky-top">
+  <nav class="navbar navbar-expand-sm shadow bg-light navbar-light sticky-top">
       <div class="container-fluid">
         <a class="navbar-brand text-primary fw-bold" href="/">
           <img src="#" 
@@ -23,35 +23,41 @@
             </li>
           </ul>
 
-
           <ul class="navbar-nav ms-auto me-2" id="logout-nav">
-            <li class="nav-item">
-              <router-link :to="{name : 'login'}" class="nav-link">로그인</router-link>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#signupModal">회원가입</a>
-            </li>
           </ul>
 
-          <!-- <ul class="navbar-nav ms-auto me-2" id="login-nav">
-          <li class="nav-item">
-              <a class="nav-link" href="#">님 환영합니다.</a>
-              
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#" id="logout">로그아웃</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">마이페이지</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">내 정보</a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#" id="myInfo">확인/수정</a></li>
-                <li><a class="dropdown-item text-danger" href="#" id="del_user">회원 탈퇴</a></li>
+          <div v-if="token">
+            <ul class="navbar-nav ms-auto me-2" id="login-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="#">님 환영합니다.</a>
+                
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" id="logout" @click="userLogout()">로그아웃</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">마이페이지</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">내 정보</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#" id="myInfo">확인/수정</a></li>
+                  <li><a class="dropdown-item text-danger" href="#" id="del_user">회원 탈퇴</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+          <div v-else>
+              <ul class="navbar-nav ms-auto me-2" id="logout-nav">
+                <li class="nav-item">
+                  <router-link :to="{name : 'login'}" class="nav-link">로그인</router-link>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#signupModal">회원가입</a>
+                </li>
               </ul>
-            </li>
-          </ul> -->
+          </div>
+
 
         </div>
       </div>
@@ -60,8 +66,12 @@
 
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useMemberStore } from "@/stores/member"
+
+const memberStore = useMemberStore()
+const { confirmToken, userLogout } = memberStore
 import {
   BNavbar,
   BNavbarBrand,
@@ -71,6 +81,13 @@ import {
   BNavbarNav,
   BNavItem,
 } from 'bootstrap-vue-next';
+
+const token = computed(() => {
+  console.log("token : ", sessionStorage.getItem("accessToken"));
+  confirmToken();
+  console.log("validToken : ", memberStore.isValidToken);
+  return sessionStorage.getItem("accessToken") !== null && memberStore.isValidToken;
+});
 
 const searchQuery = ref('');
 const router = useRouter();
