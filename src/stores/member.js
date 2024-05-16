@@ -3,7 +3,7 @@ import { useRouter } from "vue-router"
 import { defineStore } from "pinia"
 import { jwtDecode } from "jwt-decode"
 
-import { userConfirm, findById, tokenConfirm, tokenRegeneration, logout } from "@/api/user"
+import { userConfirm, findById, tokenConfirm, tokenRegeneration, logout, update } from "@/api/user"
 import { httpStatusCode } from "@/util/http-status"
 
 export const useMemberStore = defineStore("memberStore", () => {
@@ -158,6 +158,18 @@ export const useMemberStore = defineStore("memberStore", () => {
     )
   }
 
+  const userUpdate = async (data) => {
+    console.log("업데이트!");
+    await update(
+      data,
+      (response) => {
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  }
+
   return {
     isLogin,
     isLoginError,
@@ -167,6 +179,7 @@ export const useMemberStore = defineStore("memberStore", () => {
     getUserInfo,
     tokenRegenerate,
     userLogout,
-    confirmToken
+    confirmToken,
+    userUpdate
   }
 })

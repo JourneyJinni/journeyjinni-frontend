@@ -24,10 +24,14 @@ async function tokenRegeneration(userid, success, fail) {
   await local.post(`/user/refresh/${userid}`).then(success).catch(fail);
 }
 
-
 // 로그아웃
 async function logout(user_id, success, fail) {
   await local.get(`/user/logout/${user_id}`).then(success).catch(fail);
 }
 
-export { userConfirm, findById, tokenConfirm, tokenRegeneration, logout };
+async function update(data, success, fail) {
+  console.log("data = ", data);
+  await local.post(`/user/update`, data).then(success).catch(fail);
+}
+
+export { userConfirm, findById, tokenConfirm, tokenRegeneration, logout, update };
