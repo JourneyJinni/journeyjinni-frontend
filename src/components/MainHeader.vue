@@ -36,6 +36,9 @@
                 <a class="nav-link" href="#" id="logout" @click="userLogout()">로그아웃</a>
               </li>
               <li class="nav-item">
+                <router-link :to="{name : 'my-map'}" class="nav-link">나의 여행지도</router-link>
+              </li>
+              <li class="nav-item">
                 <router-link :to="{name : 'mypage'}" class="nav-link">마이페이지</router-link>
               </li>
               <li class="nav-item dropdown">
