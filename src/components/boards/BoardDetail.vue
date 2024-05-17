@@ -1,14 +1,15 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { detailArticle, deleteArticle } from "@/api/board";
-
+import { detailArticle, deleteArticle, validateUserById } from "@/api/board";
+import { useMemberStore } from "@/stores/member";
 const route = useRoute();
 const router = useRouter();
 
 // const articleno = ref(route.params.articleno);
 const { articleno } = route.params;
-
+const memberStore = useMemberStore();
+const { userInfo, getUserInfo } = memberStore;
 const article = ref({});
 
 onMounted(() => {
@@ -27,24 +28,57 @@ const getArticle = () => {
   );
 };
 
+const validateUser = (successCallback) => {
+  getUserInfo();
+  const data = {
+    author: article.value.userId,
+    user_id: userInfo.user_id
+  };
+  console.log("article", article.value);
+  console.log("data", data);
+  validateUserById(
+    data,
+    (response) => {
+      if (response.status === 200) {
+        console.log("User validation successful. Proceeding with the next logic.");
+        successCallback();
+      } else {
+        console.log("User validation failed. Error code:", response.status);
+        alert("권한이 없습니다.")
+      }
+    },
+    (error) => {
+      console.log("Request failed with error:", error);
+      alert("권한이 없습니다.")
+    }
+  );
+}
+
 function moveList() {
   router.push({ name: "article-list" });
 }
 
 function moveModify() {
-  router.push({ name: "article-modify", params: { articleno } });
+  validateUser(() => {
+    router.push({ name: "article-modify", params: { articleno } });
+  });
 }
 
 function onDeleteArticle() {
-  deleteArticle(
-    articleno,
-    (response) => {
-      if (response.status == 200) moveList();
-    },
-    (error) => {
-      console.error(error);
-    }
-  );
+  validateUser(() => {
+    deleteArticle(
+      articleno,
+      (response) => {
+        if (response.status === 200) {
+          alert("게시글이 삭제되었습니다.")
+          moveList();
+        }
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  });
 }
 </script>
 

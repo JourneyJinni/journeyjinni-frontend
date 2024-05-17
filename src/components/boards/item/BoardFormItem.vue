@@ -111,11 +111,16 @@ function writeArticle() {
 }
 
 function updateArticle() {
+  const data = {
+    article: article,
+    user_id: userInfo.user_id
+  }
   modifyArticle(
-    article.value,
+    data.value,
     (response) => {
       let msg = "글수정 처리시 문제 발생했습니다.";
       if (response.status == 200) msg = "글정보 수정이 완료되었습니다.";
+      else if (response.status == 401) msg = "작성자만 수정 가능합니다.";
       alert(msg);
       moveList();
     },

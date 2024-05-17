@@ -27,6 +27,9 @@ function deleteArticle(articleno, success, fail) {
   local.delete(`/board/${articleno}`).then(success).catch(fail);
 }
 
+function validateUserById(data, success, fail) {
+  local.post(`/board/validate`, data).then(success).catch(fail);
+}
 export {
   listArticle,
   detailArticle,
@@ -34,4 +37,5 @@ export {
   getModifyArticle,
   modifyArticle,
   deleteArticle,
+  validateUserById,
 };

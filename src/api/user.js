@@ -20,7 +20,7 @@ async function tokenConfirm(success, fail) {
 
 // 토큰 등록
 async function tokenRegeneration(userid, success, fail) {
-  local.defaults.headers["refreshToken"] = sessionStorage.getItem("refreshToken"); //axios header에 refresh-token 셋팅
+  local.defaults.headers["refreshToken"] = sessionStorage.getItem("refreshToken"); 
   await local.post(`/user/refresh/${userid}`).then(success).catch(fail);
 }
 
