@@ -85,8 +85,8 @@ const setMap = (latitude, longitude) => {
       </div>
       <div class="col-md-6">
         <KakaoMap :lat="coordinate.lat" :lng="coordinate.lng" :draggable="true">
-    <KakaoMapMarker :lat="coordinate.lat" :lng="coordinate.lng"></KakaoMapMarker>
-  </KakaoMap>
+          <KakaoMapMarker :lat="coordinate.lat" :lng="coordinate.lng"></KakaoMapMarker>
+        </KakaoMap>
       </div>
     </div>
   </div>

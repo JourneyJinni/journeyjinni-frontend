@@ -2,7 +2,9 @@
   <div>
     <input type="file" accept="image/*" @change="handleImageUpload" multiple>
     <button @click="uploadImages">Upload Images</button>
+    <MyMapSideBar/>
   </div>
+
 </template>
 
 <script setup>
@@ -10,6 +12,8 @@ import { ref } from 'vue';
 import axios from 'axios';
 import imageCompression from 'browser-image-compression';
 import exifr from 'exifr';
+import MyMapSideBar from '@/components/MyMapSideBar.vue';
+
 
 const images = ref([]);
 const metadataList = ref([]);
@@ -34,27 +38,6 @@ const getMetadata = async (file) => {
   }
 };
 
-// Blob에서 base64 데이터 URL을 얻는 함수
-const blobToDataURL = (blob) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
-};
-
-// base64 데이터 URL을 Blob으로 변환하는 함수
-const dataURLToBlob = (dataURL) => {
-  const byteString = atob(dataURL.split(',')[1]);
-  const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
-  const ab = new ArrayBuffer(byteString.length);
-  const ia = new Uint8Array(ab);
-  for (let i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
-  }
-  return new Blob([ab], { type: mimeString });
-};
 
 // 이미지 파일 압축
 const handleImageUpload = async (event) => {
