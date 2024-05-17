@@ -16,7 +16,7 @@
 
           <ul class="navbar-nav">
             <li class="nav-item">
-              <router-link :to="{name : 'board'}"  class="nav-link">공지사항</router-link>
+              <router-link :to="{name : 'board'}"  class="nav-link">게시판</router-link>
             </li>
             <li class="nav-item">
               <router-link :to="{name : 'attraction'}" class="nav-link">관광지 검색</router-link>
@@ -29,7 +29,7 @@
           <div v-if="token">
             <ul class="navbar-nav ms-auto me-2" id="login-nav">
               <li class="nav-item">
-                <a class="nav-link" href="#">님 환영합니다.</a>
+                <a class="nav-link" href="#">{{  }}님 환영합니다.</a>
                 
               </li>
               <li class="nav-item">
@@ -69,46 +69,29 @@
 
 
 <script setup>
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, onMounted  } from 'vue';
 import { useMemberStore } from "@/stores/member"
 
 const memberStore = useMemberStore()
-const { confirmToken, userLogout } = memberStore
-import {
-  BNavbar,
-  BNavbarBrand,
-  BForm,
-  BFormInput,
-  BButton,
-  BNavbarNav,
-  BNavItem,
-} from 'bootstrap-vue-next';
+const { getUserInfo, userLogout, userInfo } = memberStore
+let name = ''
 
 const token = computed(() => {
   console.log("token : ", sessionStorage.getItem("accessToken"));
   console.log("validToken : ", memberStore.isValidToken);
+  getUserInfo()
+  // name = userInfo.user_name;
   return sessionStorage.getItem("accessToken") !== null && memberStore.isValidToken;
 });
 
-const searchQuery = ref('');
-const router = useRouter();
+onMounted(() => {
+  if (token.value) {
+    getUserInfo();
+    // name = userInfo.user_name;
+  }
+});
 
-function goToMainPage() {
-  router.push('/'); // 메인 페이지로 이동
-}
 
-function goToLogin() {
-  router.push('/login'); // 로그인 페이지로 이동
-}
-
-function goToSignup() {
-  router.push('/signup'); // 회원가입 페이지로 이동
-}
-
-function onSearch() {
-  console.log('Search:', searchQuery.value); // 검색 로직
-}
 </script>
 
 <style scoped>
