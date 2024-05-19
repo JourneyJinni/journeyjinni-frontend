@@ -1,3 +1,76 @@
+<script setup>
+import axios from "axios";
+import { onMounted, ref } from 'vue';
+const myTripList = ref([]);
+import { useMemberStore } from "@/stores/member"
+import MyAttractionModal from "@/components/MyAttractionModal.vue";
+//사이드바 토글
+const isSidebarVisible = ref(false);
+//유저 아이디 불러오기
+const memberStore = useMemberStore()
+const userId = memberStore.userInfo.user_id;
+
+//등록할 여행 이름
+const registerTripName = ref("");
+//유저별 등록한 여행 불러오기
+const getUserTrip = () => {
+  axios.get("http://localhost/get-usertrip/" + userId)
+    .then(({ data }) => {
+      myTripList.value = data;
+      console.log(myTripList.value);
+    })
+    .catch((error) => {
+      console.assert(error);
+    })
+}
+onMounted(() => {
+  getUserTrip();
+}) 
+  
+
+
+//여행 등록
+const  registerTrip = async () => {
+  const formData = new FormData();
+  console.log(userId);
+  formData.append("userId", userId);
+  formData.append("tripName", registerTripName.value);
+  try {
+    const response = await axios.post('http://localhost/register-trip', formData, {
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+  registerTripName.value = ""
+  getUserTrip();
+}
+
+//사이드바 토글 메서드
+function toggleSidebar() {
+  isSidebarVisible.value = !isSidebarVisible.value;
+}
+//여행지(관광지) 등록
+const registerAttraction = async () => {
+  
+  const formData = new FormData();
+  formData.append("userId", userId);
+  formData.append("tripName", registerTripName.value);
+
+  try {
+    const response = await axios.post('http://localhost/register-attraction', formData, {
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+  registerTripName.value = ""
+  getUserTrip();
+}
+</script>
+
+
+
 <template>
   <div id="app">
     <button class="btn btn-primary" @click="toggleSidebar">Toggle Sidebar</button>
@@ -10,12 +83,16 @@
       <ul class="list-unstyled components">
         <li v-for="trip in myTripList" :key="trip.trip_id">
           <p> {{trip.trip_name}}</p>
+          <button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="trip.trip_id">
+          여행지 추가
+          </button>
+          <MyAttractionModal :trip-id="trip.trip_id"/>
         </li>
       </ul>
     </div>
 
-    <!-- 모달 -->
-    <div class="modal fade" id="addTripModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- 여행 추가 모달 -->
+  <div class="modal fade" id="addTripModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -33,58 +110,17 @@
       </div>
     </div>
   </div>
+
+
 </div>
 
   
 </template>
 
-<script setup>
-import axios from "axios";
-import { onMounted, ref } from 'vue';
-const myTripList = ref([]);
-import { useMemberStore } from "@/stores/member"
-import { onBeforeRouteUpdate } from "vue-router";
-
-const memberStore = useMemberStore()
-const userId = memberStore.userInfo.user_id;
-const registerTripName = ref("");
-const getUserTrip = () => {
-  axios.get("http://localhost/get-usertrip/" + userId)
-    .then(({ data }) => {
-      myTripList.value = data;
-      console.log(myTripList.value);
-    })
-    .catch((error) => {
-      console.assert(error);
-    })
-}
-onMounted(() => {
-  getUserTrip();
-}) 
-  
 
 
-const isSidebarVisible = ref(false);
-const  registerTrip = async () => {
-  const formData = new FormData();
-  console.log(userId);
-  formData.append("userId", userId);
-  formData.append("tripName", registerTripName.value);
-  try {
-    const response = await axios.post('http://localhost/register-trip', formData, {
-    });
-    console.log(response.data);
-  } catch (error) {
-    console.log(error);
-  }
-  registerTripName.value = ""
-  getUserTrip();
-}
-function toggleSidebar() {
-  isSidebarVisible.value = !isSidebarVisible.value;
-}
 
-</script>
+
 
 <style>
 #app {
