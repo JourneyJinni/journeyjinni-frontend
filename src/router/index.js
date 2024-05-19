@@ -4,6 +4,7 @@ import LoginView from '@/views/LoginView.vue';
 import MainPageView from '@/views/MainPageView.vue';
 import MyMapView from '@/views/MyMapView.vue';
 import MyPage from '@/views/MyPage.vue';
+import SignUpView from '@/views/SignUpView.vue';
 import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from 'vue-router';
 
@@ -46,6 +47,11 @@ const router = createRouter({
       path: '/login',
       name: 'login',
       component: LoginView,
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: SignUpView,
     },
     {
       path: '/mymap',
