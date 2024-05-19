@@ -4,45 +4,86 @@
 
     <div id="sidebar" :class="{'active': isSidebarVisible}">
       <div class="sidebar-header">
-        <h5>Sidebar</h5>
-        <button class="btn btn-link" @click="showModal">+</button>
+        <h5>나의 여행</h5>
+        <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#addTripModal">+</button>
       </div>
-      <p>Sidebar content goes here.</p>
+      <ul class="list-unstyled components">
+        <li v-for="trip in myTripList" :key="trip.trip_id">
+          <p> {{trip.trip_name}}</p>
+        </li>
+      </ul>
     </div>
 
     <!-- 모달 -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal Title</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            Modal content goes here.
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
+    <div class="modal fade" id="addTripModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">여행 등록</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <label>여행 이름: </label>
+          <input type="text" v-model="registerTripName">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="registerTrip">등록</button>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+  
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import axios from "axios";
+import { onMounted, ref } from 'vue';
+const myTripList = ref([]);
+import { useMemberStore } from "@/stores/member"
+import { onBeforeRouteUpdate } from "vue-router";
+
+const memberStore = useMemberStore()
+const userId = memberStore.userInfo.user_id;
+const registerTripName = ref("");
+const getUserTrip = () => {
+  axios.get("http://localhost/get-usertrip/" + userId)
+    .then(({ data }) => {
+      myTripList.value = data;
+      console.log(myTripList.value);
+    })
+    .catch((error) => {
+      console.assert(error);
+    })
+}
+onMounted(() => {
+  getUserTrip();
+}) 
+  
+
 
 const isSidebarVisible = ref(false);
-
+const  registerTrip = async () => {
+  const formData = new FormData();
+  console.log(userId);
+  formData.append("userId", userId);
+  formData.append("tripName", registerTripName.value);
+  try {
+    const response = await axios.post('http://localhost/register-trip', formData, {
+    });
+    console.log(response.data);
+  } catch (error) {
+    console.log(error);
+  }
+  registerTripName.value = ""
+  getUserTrip();
+}
 function toggleSidebar() {
   isSidebarVisible.value = !isSidebarVisible.value;
 }
 
-function showModal() {
-  const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
-  modal.show();
-}
 </script>
 
 <style>
@@ -78,4 +119,33 @@ function showModal() {
   background: none;
   border: none;
 }
+
+
+#sidebar ul.components {
+      padding: 20px 0;
+      border-bottom: 1px solid #47748b;
+    }
+
+    #sidebar ul p {
+      padding: 10px;
+      color: #000;
+    }
+
+    #sidebar ul li a {
+      padding: 10px;
+      font-size: 1.1em;
+      display: block;
+      color: #d1d1d1;
+      transition: 0.3s;
+    }
+
+    #sidebar ul li a:hover {
+      color: #fff;
+      background: #6c757d;
+    }
+
+    #sidebar ul li.active > a {
+      background: #6c757d;
+      color: #fff;
+    }
 </style>
