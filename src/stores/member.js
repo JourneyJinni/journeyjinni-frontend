@@ -3,7 +3,7 @@ import { useRouter } from "vue-router"
 import { defineStore } from "pinia"
 import { jwtDecode } from "jwt-decode"
 
-import { userConfirm, findById, tokenConfirm, tokenRegeneration, logout, update } from "@/api/user"
+import { userConfirm, findById, tokenConfirm, tokenRegeneration, signup, logout, update } from "@/api/user"
 import { httpStatusCode } from "@/util/http-status"
 
 export const useMemberStore = defineStore("memberStore", () => {
@@ -123,7 +123,7 @@ export const useMemberStore = defineStore("memberStore", () => {
               isLogin.value = false
               userInfo.value = null
               isValidToken.value = false
-              router.push({ name: "user-login" })
+              router.push({ name: "login" })
             },
             (error) => {
               console.error(error)
@@ -158,6 +158,23 @@ export const useMemberStore = defineStore("memberStore", () => {
     )
   }
 
+  const userSignUp = async (data) => {
+    await signup(
+        data,
+        (response) => {
+          if (response.data.success) {
+            alert("회원가입이 완료되었습니다.")
+            router.push({ name: "login" })
+          } else {
+            console.log("회원가입 실패")
+          }
+        },
+        (error) => {
+          console.log(error)
+        }
+    )
+  }
+
   const userUpdate = async (data) => {
     console.log("업데이트!");
     await update(
@@ -180,6 +197,7 @@ export const useMemberStore = defineStore("memberStore", () => {
     userLogin,
     getUserInfo,
     tokenRegenerate,
+    userSignUp,
     userLogout,
     confirmToken,
     userUpdate,

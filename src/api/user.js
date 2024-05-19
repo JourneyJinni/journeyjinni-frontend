@@ -30,6 +30,11 @@ async function logout(user_id, success, fail) {
   await local.get(`/user/logout/${user_id}`).then(success).catch(fail);
 }
 
+async function signup(data, success, fail) {
+  console.log("data = ", data);
+  await local.post(`/user/signup`, data).then(success).catch(fail);
+}
+
 async function update(data, success, fail) {
   console.log("data = ", data);
   await local.post(`/user/update`, data).then(success).catch(fail);
@@ -39,4 +44,4 @@ async function checkId(userid, success){
   await local.post('/user/checkUserId', { userid: userid }).then(success);
 }
 
-export { userConfirm, findById, tokenConfirm, tokenRegeneration, logout, update, checkId };
+export { userConfirm, findById, tokenConfirm, tokenRegeneration, logout, signup, update, checkId };
