@@ -13,7 +13,7 @@ export const useMemberStore = defineStore("memberStore", () => {
   const isLoginError = ref(false)
   const userInfo = ref(null)
   const isValidToken = ref(false)
-
+  const username = ref()
   const userLogin = async (loginUser) => {
     await userConfirm(
       loginUser,
@@ -29,6 +29,7 @@ export const useMemberStore = defineStore("memberStore", () => {
           userInfo.value = response.data.userInfo
           sessionStorage.setItem("accessToken", accessToken)
           sessionStorage.setItem("refreshToken", refreshToken)
+          getUserInfo(accessToken)
         }
       },
       (error) => {
@@ -49,6 +50,9 @@ export const useMemberStore = defineStore("memberStore", () => {
       (response) => {
         if (response.status === httpStatusCode.OK) {
           userInfo.value = response.data.userInfo
+          username.value = userInfo.value.user_name
+          console.log("username", username)
+          console.log("username.value", username.value)
           isValidToken.value = true
         } else {
           isValidToken.value = false
@@ -137,26 +141,37 @@ export const useMemberStore = defineStore("memberStore", () => {
   }
 
   const userLogout = async () => {
-    console.log("로그아웃 아이디 : " + userInfo.value.user_id)
-    await logout(
-      userInfo.value.user_id,
-      (response) => {
-        if (response.status === httpStatusCode.OK) {
-          isLogin.value = false
-          userInfo.value = null
-          isValidToken.value = false
+    // 로그아웃 확인 대화 상자 표시
+    const confirmed = confirm("정말 로그아웃 하시겠습니까?");
 
-          sessionStorage.removeItem("accessToken")
-          sessionStorage.removeItem("refreshToken")
-        } else {
-          console.error("유저 정보 없음!!!!")
+    if (!confirmed) {
+      // 사용자가 로그아웃을 취소했을 때
+      console.log("로그아웃이 취소되었습니다.");
+      return;
+    }
+
+    console.log("로그아웃 아이디 : " + userInfo.value.user_id);
+    await logout(
+        userInfo.value.user_id,
+        (response) => {
+          if (response.status === httpStatusCode.OK) {
+            isLogin.value = false;
+            userInfo.value = null;
+            isValidToken.value = false;
+
+            sessionStorage.removeItem("accessToken");
+            sessionStorage.removeItem("refreshToken");
+            alert("로그아웃 되었습니다.")
+          } else {
+            console.error("유저 정보 없음!!!!");
+          }
+        },
+        (error) => {
+          console.log(error);
         }
-      },
-      (error) => {
-        console.log(error)
-      }
-    )
-  }
+    );
+  };
+
 
   const userSignUp = async (data) => {
     await signup(
@@ -194,6 +209,7 @@ export const useMemberStore = defineStore("memberStore", () => {
     isLoginError,
     userInfo,
     isValidToken,
+    username,
     userLogin,
     getUserInfo,
     tokenRegenerate,

@@ -29,8 +29,7 @@
           <div v-if="token">
             <ul class="navbar-nav ms-auto me-2" id="login-nav">
               <li class="nav-item">
-                <a class="nav-link" href="#">{{ name }}님 환영합니다.</a>
-                
+                <router-link :to="{name : 'mypage'}" class="nav-link">{{ name }}님 환영합니다.</router-link>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#" id="logout" @click="userLogout()">로그아웃</a>
@@ -73,24 +72,20 @@ import { ref, computed, onMounted  } from 'vue';
 import { useMemberStore } from "@/stores/member"
 
 const memberStore = useMemberStore()
-const { getUserInfo, userLogout, userInfo } = memberStore
-let name = ''
+const { getUserInfo, userLogout, username } = memberStore
+
 
 const token = computed(() => {
   console.log("token : ", sessionStorage.getItem("accessToken"));
   console.log("validToken : ", memberStore.isValidToken);
-  getUserInfo()
-   name = userInfo.user_name;
+  // if (token.value) {
+  //   getUserInfo();
+  //   name = userInfo.user_name;
+  // }
   return sessionStorage.getItem("accessToken") !== null && memberStore.isValidToken;
 });
 
-onMounted(() => {
-  if (token.value) {
-    getUserInfo();
-     name = userInfo.user_name;
-  }
-});
-
+const name = computed(() => memberStore.username);
 
 </script>
 
