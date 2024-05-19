@@ -170,6 +170,8 @@ export const useMemberStore = defineStore("memberStore", () => {
     )
   }
 
+
+
   return {
     isLogin,
     isLoginError,
@@ -180,6 +182,6 @@ export const useMemberStore = defineStore("memberStore", () => {
     tokenRegenerate,
     userLogout,
     confirmToken,
-    userUpdate
+    userUpdate,
   }
 })

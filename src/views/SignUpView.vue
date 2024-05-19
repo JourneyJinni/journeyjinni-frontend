@@ -15,9 +15,9 @@
           <div class="mb-3">
             <label for="userid" class="form-label">아이디 : </label>
             <input v-model="form.userid" type="text" class="form-control" placeholder="아이디..." />
-            <button type="button" class="btn btn-outline-secondary mt-2" @click="checkUserId">아이디 중복 확인</button>
+            <button type="button" class="btn btn-outline-secondary mt-2" @click="checkUserid">아이디 중복 확인</button>
             <div v-if="useridCheckStatus === 'available'" class="text-success">사용 가능한 아이디입니다.</div>
-            <div v-if="useridCheckStatus === 'unavailable'" class="text-danger">이미 사용 중인 아이디입니다.</div>
+            <div v-if="useridCheckStatus === 'unavailable'" class="text-danger">사용 불가능한 아이디입니다.</div>
           </div>
           <div class="mb-3">
             <label for="userpwd" class="form-label">비밀번호 : </label>
@@ -54,7 +54,9 @@
 
 <script setup>
 import { ref, reactive, watch } from 'vue';
-import axios from 'axios';
+import {checkId} from "@/api/user.js"
+
+
 
 const form = reactive({
   username: '',
@@ -72,14 +74,20 @@ watch(() => [form.userpwd, form.pwdcheck], () => {
   form.passwordsMatch = form.userpwd === form.pwdcheck;
 });
 
-const checkUserId = async () => {
+// 아이디 중복 체크 axios
+const checkUserid = async () => {
+  console.log("userId : ", form.userid)
   try {
-    const response = await axios.post('/api/checkUserId', { userid: form.userid });
-    if (response.data.available) {
-      useridCheckStatus.value = 'available';
-    } else {
-      useridCheckStatus.value = 'unavailable';
-    }
+    await checkId(form.userid,
+        (response) => {
+          if (response.data.success) {
+            console.log("true")
+            useridCheckStatus.value = 'available';
+          } else {
+            useridCheckStatus.value = 'unavailable';
+          }
+        }
+    )
   } catch (error) {
     console.error('아이디 중복 확인 중 오류가 발생했습니다:', error);
   }

@@ -1,4 +1,5 @@
 import { localAxios } from "@/util/http-commons";
+import axios from "axios";
 
 const local = localAxios();
 
@@ -34,4 +35,8 @@ async function update(data, success, fail) {
   await local.post(`/user/update`, data).then(success).catch(fail);
 }
 
-export { userConfirm, findById, tokenConfirm, tokenRegeneration, logout, update };
+async function checkId(userid, success){
+  await local.post('/user/checkUserId', { userid: userid }).then(success);
+}
+
+export { userConfirm, findById, tokenConfirm, tokenRegeneration, logout, update, checkId };
