@@ -15,7 +15,11 @@
         </div>
         <div class="mb-3 text-start">
           <label for="email" class="form-label">이메일 :</label>
-          <input type="text" class="form-control" v-model="email"  :disabled="!isEmailEditMode" />
+          <div class="input-group">
+            <input type="text" class="form-control" v-model="emailId" :disabled="!isEmailEditMode" placeholder="이메일 아이디" />
+            <span class="input-group-text">@</span>
+            <input type="text" class="form-control" v-model="emailDomain" :disabled="!isEmailEditMode" placeholder="이메일 도메인" />
+          </div>
         </div>
         <div class="mb-3 text-start">
           <label for="password" class="form-label">비밀번호 :</label>
@@ -37,12 +41,15 @@
 
 <script setup>
 import { useMemberStore } from "@/stores/member";
-const memberStore = useMemberStore()
-const { userUpdate } = memberStore
 import { ref } from 'vue';
+
+const memberStore = useMemberStore();
+const { userUpdate } = memberStore;
 const userInfo = memberStore.userInfo;
+
 let userName = ref(userInfo.user_name);
-let email = ref(userInfo.email_id);
+let emailId = ref(userInfo.email_id);
+let emailDomain = ref(userInfo.email_domain);
 let password = ref(userInfo.user_password);
 
 const isEditMode = ref(false);
@@ -56,6 +63,7 @@ const updateData = {
   email_id: '',
   user_password: ''
 };
+
 const toggleEditMode = () => {
   isEditMode.value = !isEditMode.value;
 
@@ -69,9 +77,9 @@ const toggleEditMode = () => {
     isPasswordEditMode.value = false;
 
     updateData.user_name = userName.value;
-    updateData.email_id = email.value;
+    updateData.email_id = `${emailId.value}@${emailDomain.value}`;
     updateData.user_password = password.value;
-    
+
     console.log("userData : ", updateData);
     userUpdate(updateData);
   }
@@ -79,5 +87,4 @@ const toggleEditMode = () => {
 </script>
 
 <style scoped>
-
 </style>
