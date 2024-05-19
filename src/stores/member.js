@@ -202,4 +202,6 @@ export const useMemberStore = defineStore("memberStore", () => {
     confirmToken,
     userUpdate,
   }
-})
+} ,  {
+  persist: true
+}  )
