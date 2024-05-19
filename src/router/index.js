@@ -4,10 +4,13 @@ import LoginView from '@/views/LoginView.vue';
 import MainPageView from '@/views/MainPageView.vue';
 import MyMapView from '@/views/MyMapView.vue';
 import MyPage from '@/views/MyPage.vue';
+import SignUpView from '@/views/SignUpView.vue';
 import { storeToRefs } from "pinia";
 import { createRouter, createWebHistory } from 'vue-router';
 
 import { useMemberStore } from "@/stores/member";
+import TripBoardView from "@/views/TripBoardView.vue";
+import TripDetail from "@/components/tripboards/TripDetail.vue";
 const onlyAuthUser = async (to, from, next) => {
   console.log("onlyAuthUser!!!")
   const memberStore = useMemberStore();
@@ -40,12 +43,27 @@ const router = createRouter({
       path: '/attraction',
       name: 'attraction',
       component: AttractionSearchView,
-    }
-    ,
+    },
+    {
+      path: '/tripBoard',
+      name: 'tripboard',
+      component: TripBoardView,
+    },
+    {
+      path: '/trip/:id',
+      name: 'tripdetail',
+      component: TripDetail,
+      props: true,
+    },
     {
       path: '/login',
       name: 'login',
       component: LoginView,
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: SignUpView,
     },
     {
       path: '/mymap',

@@ -3,7 +3,7 @@ import { useRouter } from "vue-router"
 import { defineStore } from "pinia"
 import { jwtDecode } from "jwt-decode"
 
-import { userConfirm, findById, tokenConfirm, tokenRegeneration, logout, update } from "@/api/user"
+import { userConfirm, findById, tokenConfirm, tokenRegeneration, signup, logout, update, signout } from "@/api/user"
 import { httpStatusCode } from "@/util/http-status"
 
 export const useMemberStore = defineStore("memberStore", () => {
@@ -13,7 +13,8 @@ export const useMemberStore = defineStore("memberStore", () => {
   const isLoginError = ref(false)
   const userInfo = ref(null)
   const isValidToken = ref(false)
-
+  const username = ref()
+  const userId = ref()
   const userLogin = async (loginUser) => {
     await userConfirm(
       loginUser,
@@ -29,6 +30,7 @@ export const useMemberStore = defineStore("memberStore", () => {
           userInfo.value = response.data.userInfo
           sessionStorage.setItem("accessToken", accessToken)
           sessionStorage.setItem("refreshToken", refreshToken)
+          getUserInfo(accessToken)
         }
       },
       (error) => {
@@ -49,6 +51,10 @@ export const useMemberStore = defineStore("memberStore", () => {
       (response) => {
         if (response.status === httpStatusCode.OK) {
           userInfo.value = response.data.userInfo
+          username.value = userInfo.value.user_name
+          userId.value = userInfo.value.user_id
+          console.log("username", username)
+          console.log("username.value", username.value)
           isValidToken.value = true
         } else {
           isValidToken.value = false
@@ -123,7 +129,7 @@ export const useMemberStore = defineStore("memberStore", () => {
               isLogin.value = false
               userInfo.value = null
               isValidToken.value = false
-              router.push({ name: "user-login" })
+              router.push({ name: "login" })
             },
             (error) => {
               console.error(error)
@@ -137,24 +143,52 @@ export const useMemberStore = defineStore("memberStore", () => {
   }
 
   const userLogout = async () => {
-    console.log("로그아웃 아이디 : " + userInfo.value.user_id)
-    await logout(
-      userInfo.value.user_id,
-      (response) => {
-        if (response.status === httpStatusCode.OK) {
-          isLogin.value = false
-          userInfo.value = null
-          isValidToken.value = false
+    // 로그아웃 확인 대화 상자 표시
+    const confirmed = confirm("정말 로그아웃 하시겠습니까?");
 
-          sessionStorage.removeItem("accessToken")
-          sessionStorage.removeItem("refreshToken")
-        } else {
-          console.error("유저 정보 없음!!!!")
+    if (!confirmed) {
+      // 사용자가 로그아웃을 취소했을 때
+      console.log("로그아웃이 취소되었습니다.");
+      return;
+    }
+
+    console.log("로그아웃 아이디 : " + userInfo.value.user_id);
+    await logout(
+        userInfo.value.user_id,
+        (response) => {
+          if (response.status === httpStatusCode.OK) {
+            isLogin.value = false;
+            userInfo.value = null;
+            isValidToken.value = false;
+
+            sessionStorage.removeItem("accessToken");
+            sessionStorage.removeItem("refreshToken");
+            alert("로그아웃 되었습니다.")
+          } else {
+            console.error("유저 정보 없음!!!!");
+          }
+        },
+        (error) => {
+          console.log(error);
         }
-      },
-      (error) => {
-        console.log(error)
-      }
+    );
+  };
+
+
+  const userSignUp = async (data) => {
+    await signup(
+        data,
+        (response) => {
+          if (response.data.success) {
+            alert("회원가입이 완료되었습니다.")
+            router.push({ name: "login" })
+          } else {
+            console.log("회원가입 실패")
+          }
+        },
+        (error) => {
+          console.log(error)
+        }
     )
   }
 
@@ -162,11 +196,22 @@ export const useMemberStore = defineStore("memberStore", () => {
     console.log("업데이트!");
     await update(
       data,
-      (response) => {
-      },
+      (response) => {},
       (error) => {
         console.log(error)
       }
+    )
+  }
+
+  const deleteUser = async (user_id) => {
+    await signout(
+        user_id,
+        (response) => {
+          console.log("삭제 완료")
+        },
+        (error) => {
+          console.log("삭제 실패")
+        }
     )
   }
 
@@ -175,11 +220,17 @@ export const useMemberStore = defineStore("memberStore", () => {
     isLoginError,
     userInfo,
     isValidToken,
+    username,
+    userId,
     userLogin,
     getUserInfo,
     tokenRegenerate,
+    userSignUp,
     userLogout,
     confirmToken,
-    userUpdate
+    userUpdate,
+    deleteUser
   }
-})
+} ,  {
+  persist: true
+}  )
