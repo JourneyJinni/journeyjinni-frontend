@@ -10,7 +10,6 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import { useMemberStore } from "@/stores/member";
 import TripBoardView from "@/views/TripBoardView.vue";
-import CardTrip from "@/components/tripboards/CardTrip.vue";
 import TripDetail from "@/components/tripboards/TripDetail.vue";
 const onlyAuthUser = async (to, from, next) => {
   console.log("onlyAuthUser!!!")

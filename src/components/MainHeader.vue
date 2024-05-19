@@ -21,6 +21,9 @@
             <li class="nav-item">
               <router-link :to="{name : 'attraction'}" class="nav-link">관광지 검색</router-link>
             </li>
+            <li class="nav-item">
+              <router-link :to="{name : 'tripboard'}" class="nav-link">여행 코스</router-link>
+            </li>
           </ul>
 
           <ul class="navbar-nav ms-auto me-2" id="logout-nav">
@@ -44,7 +47,7 @@
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">내 정보</a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#" id="myInfo">확인/수정</a></li>
-                  <li><a class="dropdown-item text-danger" href="#" id="del_user">회원 탈퇴</a></li>
+                  <li><a class="dropdown-item text-danger" href=# id="del_user" @click="deleteUser(user_id)">회원 탈퇴</a></li>
                 </ul>
               </li>
             </ul>
@@ -68,25 +71,23 @@
 
 
 <script setup>
-import { ref, computed, onMounted  } from 'vue';
+import { computed  } from 'vue';
 import { useMemberStore } from "@/stores/member"
 
 const memberStore = useMemberStore()
-const { getUserInfo, userLogout, username } = memberStore
+const { userLogout, username, deleteUser, userId } = memberStore
 
 
 const token = computed(() => {
   console.log("token : ", sessionStorage.getItem("accessToken"));
   console.log("validToken : ", memberStore.isValidToken);
-  // if (token.value) {
-  //   getUserInfo();
-  //   name = userInfo.user_name;
-  // }
+
   return sessionStorage.getItem("accessToken") !== null && memberStore.isValidToken;
 });
 
 const name = computed(() => memberStore.username);
 
+const user_id = computed(() => memberStore.userId);
 </script>
 
 <style scoped>

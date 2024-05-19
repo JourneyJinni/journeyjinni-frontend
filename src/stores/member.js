@@ -3,7 +3,7 @@ import { useRouter } from "vue-router"
 import { defineStore } from "pinia"
 import { jwtDecode } from "jwt-decode"
 
-import { userConfirm, findById, tokenConfirm, tokenRegeneration, signup, logout, update } from "@/api/user"
+import { userConfirm, findById, tokenConfirm, tokenRegeneration, signup, logout, update, signout } from "@/api/user"
 import { httpStatusCode } from "@/util/http-status"
 
 export const useMemberStore = defineStore("memberStore", () => {
@@ -14,6 +14,7 @@ export const useMemberStore = defineStore("memberStore", () => {
   const userInfo = ref(null)
   const isValidToken = ref(false)
   const username = ref()
+  const userId = ref()
   const userLogin = async (loginUser) => {
     await userConfirm(
       loginUser,
@@ -51,6 +52,7 @@ export const useMemberStore = defineStore("memberStore", () => {
         if (response.status === httpStatusCode.OK) {
           userInfo.value = response.data.userInfo
           username.value = userInfo.value.user_name
+          userId.value = userInfo.value.user_id
           console.log("username", username)
           console.log("username.value", username.value)
           isValidToken.value = true
@@ -194,15 +196,24 @@ export const useMemberStore = defineStore("memberStore", () => {
     console.log("업데이트!");
     await update(
       data,
-      (response) => {
-      },
+      (response) => {},
       (error) => {
         console.log(error)
       }
     )
   }
 
-
+  const deleteUser = async (user_id) => {
+    await signout(
+        user_id,
+        (response) => {
+          console.log("삭제 완료")
+        },
+        (error) => {
+          console.log("삭제 실패")
+        }
+    )
+  }
 
   return {
     isLogin,
@@ -210,6 +221,7 @@ export const useMemberStore = defineStore("memberStore", () => {
     userInfo,
     isValidToken,
     username,
+    userId,
     userLogin,
     getUserInfo,
     tokenRegenerate,
@@ -217,6 +229,7 @@ export const useMemberStore = defineStore("memberStore", () => {
     userLogout,
     confirmToken,
     userUpdate,
+    deleteUser
   }
 } ,  {
   persist: true

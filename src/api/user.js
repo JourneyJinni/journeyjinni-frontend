@@ -44,4 +44,8 @@ async function checkId(userid, success){
   await local.post('/user/checkUserId', { userid: userid }).then(success);
 }
 
-export { userConfirm, findById, tokenConfirm, tokenRegeneration, logout, signup, update, checkId };
+async function signout(userid, success){
+  await local.get(`/user/delete/${userid}`).then(success);
+}
+
+export { userConfirm, findById, tokenConfirm, tokenRegeneration, logout, signup, update, checkId, signout };
