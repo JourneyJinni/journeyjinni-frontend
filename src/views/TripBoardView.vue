@@ -3,7 +3,7 @@
     <h1 class="text-center my-5">여행 코스</h1>
     <div class="row">
       <div class="col-md-4" v-for="(post, index) in posts" :key="index">
-        <TripDetail :post="post" />
+        <CardTrip :post="post" />
       </div>
     </div>
   </div>
@@ -11,7 +11,7 @@
 
 <script setup>
 import { ref } from "vue";
-import TripDetail from "@/components/tripboards/TripDetail.vue";
+import CardTrip from "@/components/tripboards/CardTrip.vue";
 
 const posts = ref([
   {

@@ -10,6 +10,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import { useMemberStore } from "@/stores/member";
 import TripBoardView from "@/views/TripBoardView.vue";
+import CardTrip from "@/components/tripboards/CardTrip.vue";
 import TripDetail from "@/components/tripboards/TripDetail.vue";
 const onlyAuthUser = async (to, from, next) => {
   console.log("onlyAuthUser!!!")
@@ -50,8 +51,8 @@ const router = createRouter({
       component: TripBoardView,
     },
     {
-      path: '/post/:id',
-      name: 'TripDetail',
+      path: '/trip/:id',
+      name: 'tripdetail',
       component: TripDetail,
       props: true,
     },
