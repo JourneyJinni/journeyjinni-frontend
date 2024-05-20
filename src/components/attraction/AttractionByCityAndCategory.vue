@@ -51,10 +51,8 @@ const filterList = (searchOptions) => {
   getAttractionListByFilter(
       searchOptions.value,
       (response) => {
-       // searchedList.value = []; // 리스트 초기화
-        console.log("res", response.val);
-        attractionStore.searchedList = response;
-        console.log(  attractionStore.searchedList)
+        attractionStore.searchedList= []; // 리스트 초기화
+        attractionStore.searchedList = response.data;
       },
       (error) => {
         console.error(error);
@@ -103,7 +101,6 @@ const getGugun = (event) => {
         <!-- kakao map end -->
         <!-- 관광지 검색 end -->
     </div>
-    <AttractionSearchList v-if="isSearch" :sido="selectedSido" :gugun="selectedGugun" :attraction-type='selectedAttractionType'/>
 </template>
 
 <style scoped>
