@@ -101,7 +101,6 @@ const getGugun = (event) => {
         <!-- kakao map end -->
         <!-- 관광지 검색 end -->
     </div>
-    <AttractionSearchList v-if="isSearch" :sido="selectedSido" :gugun="selectedGugun" :attraction-type='selectedAttractionType'/>
 </template>
 
 <style scoped>
