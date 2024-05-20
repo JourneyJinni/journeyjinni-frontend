@@ -1,5 +1,5 @@
 
-import AttractionSearchView from '@/views/AttractionSearchView.vue';
+import AttractionSearchView from '@/components/attraction/AttractionByCityAndCategory.vue';
 import LoginView from '@/views/LoginView.vue';
 import MainPageView from '@/views/MainPageView.vue';
 import MyMapView from '@/views/MyMapView.vue';
@@ -11,6 +11,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useMemberStore } from "@/stores/member";
 import TripBoardView from "@/views/TripBoardView.vue";
 import TripDetail from "@/components/tripboards/TripDetail.vue";
+import TheAttractionSerachView from "@/views/TheAttractionSerachView.vue";
 const onlyAuthUser = async (to, from, next) => {
   console.log("onlyAuthUser!!!")
   const memberStore = useMemberStore();
@@ -42,7 +43,7 @@ const router = createRouter({
     {
       path: '/attraction',
       name: 'attraction',
-      component: AttractionSearchView,
+      component: TheAttractionSerachView,
     },
     {
       path: '/tripBoard',
