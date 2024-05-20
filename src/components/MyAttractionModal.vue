@@ -13,6 +13,10 @@ const props = defineProps({
     default: null
   }
 });
+const emit = defineEmits(['refreshAttractions']);
+const refreshAttractions = () => {
+  emit('refreshAttractions');
+}
 
 const thisTripId = ref();
 const images = ref([]);
@@ -83,7 +87,8 @@ const submitForm = async () => {
     console.log(response.data);
     } catch (error) {
       console.log(error);
-}
+  }
+  refreshAttractions();
 }
 // 모달 초기화
 onMounted(() => {

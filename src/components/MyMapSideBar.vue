@@ -102,14 +102,19 @@ const openAttractionAddModal = (tripId) => {
 
 <template>
   <div id="app">
-    <button class="btn btn-primary" @click="toggleSidebar">Toggle Sidebar</button>
+    <button class="image-button" @click="toggleSidebar" v-show="!isSidebarVisible">
+      <img src="@/assets/sidebar_MyMap.png" alt="Toggle Sidebar">
+    </button>
 
     <div id="sidebar" :class="{'active': isSidebarVisible}">
-      <div class="sidebar-header">
-        <h5>나의 여행</h5>
-        <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#addTripModal">+</button>
-      </div>
-      <div class="list-group" v-for="(trip,index) in myTripList" :key="trip.trip_id">
+    <div class="sidebar-header d-flex justify-content-between align-items-center">
+      <button class="image-button-left" @click="toggleSidebar">
+        <img src="@/assets/sidebar_MyMap_right.png" alt="Toggle Sidebar">
+      </button>
+      <h5>나의 여행</h5>
+      <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#addTripModal">+</button>
+    </div>
+    <div class="list-group" v-for="(trip, index) in myTripList" :key="trip.trip_id">
       <button
         @click="tripListFlags[index] = !tripListFlags[index]" 
         class="list-group-item list-group-item-action"
@@ -118,27 +123,28 @@ const openAttractionAddModal = (tripId) => {
         <div class="d-flex w-100 justify-content-between">
           <p class="mb-1">{{ trip.trip_name }}</p>
           <small>
-            <button class=""  @click.stop='openAttractionAddModal(trip.trip_id)'>
+            <button class="" @click.stop="openAttractionAddModal(trip.trip_id)">
               +
-          </button>
+            </button>
           </small>
         </div>
-
-      
-      <div v-if='tripListFlags[index]' class='margin-5px'>
-      <button class="list-group-item list-group-item-action"  v-for="attration in myAttractionMap.get(trip.trip_id)" :key='attration.attraction_id'>
-          <div class="d-flex w-100 justify-content-between">
-            <p class="mb-1">{{ attration.attraction_name }}</p>
-          </div>
-
-        </button>
-      </div>
-    </button>
-      </div>
-
+        <div v-if="tripListFlags[index]" class="margin-5px">
+          <button
+            class="list-group-item list-group-item-action"
+            v-for="attraction in myAttractionMap.get(trip.trip_id)"
+            :key="attraction.attraction_id"
+          >
+            <div class="d-flex w-100 justify-content-between">
+              <p class="mb-1">{{ attraction.attraction_name }}</p>
+            </div>
+          </button>
+        </div>
+      </button>
     </div>
+  </div>
 
-    <MyAttractionModal :trip-id="currentTripId"/>
+
+    <MyAttractionModal :trip-id="currentTripId" @refresh-attractions="getUserTrip"/>
     <!-- 여행 추가 모달 -->
   <div class="modal fade" id="addTripModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -194,8 +200,23 @@ const openAttractionAddModal = (tripId) => {
 
 .sidebar-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.image-button-left {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.image-button-left img {
+  width: 50px; /* 이미지 크기를 조절하세요 */
+  height: 50px; /* 이미지 크기를 조절하세요 */
 }
 
 .btn-close {
@@ -231,5 +252,19 @@ const openAttractionAddModal = (tripId) => {
     #sidebar ul li.active > a {
       background: #6c757d;
       color: #fff;
+    }
+    .image-button {
+      position: fixed;
+      top: 100px;
+      right: 10px;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .image-button img {
+      width: 50px; /* 이미지 크기를 조절하세요 */
+      height: 50px; /* 이미지 크기를 조절하세요 */
     }
 </style>

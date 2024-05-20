@@ -1,7 +1,6 @@
 <template>
   <div>
-    <input type="file" accept="image/*" @change="handleImageUpload" multiple>
-    <button @click="uploadImages">Upload Images</button>
+
     <MyMapSideBar/>
   </div>
 
