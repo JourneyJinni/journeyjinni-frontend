@@ -12,12 +12,12 @@ const props = defineProps({
     type: [String, Number],
     required: true
   }
+  
 });
 
 console.log(props.tripId)
 const images = ref([]);
 const metadataList = ref([]);
-
 const attractionName = ref("");
 const attractionDes = ref("");
 
@@ -82,26 +82,28 @@ const submitForm = async () => {
     });
     console.log(response.data);
     } catch (error) {
-    console.log(error);
+      console.log(error);
 }
 }
 // 모달 초기화
-// onMounted(() => {
-//   const modalElement = document.getElementById(`modal${props.tripId}`);
-//   if (modalElement) {
-//     new Modal(modalElement);
-//   }
-// });
-// onMounted(() => {
-//   const modalElement = document.getElementById('attractionModal${props.tripId}');
-//   if (modalElement) {
-//     // 동적으로 모달을 초기화합니다.
-//     new Modal(modalElement);
-//   } else {
-//     console.error(`Modal element with ID modal${props.tripId} not found.`);
-//   }
-// });
+onMounted(() => {
+  const modalElement = document.getElementById('myAttractionModal');
+  if (modalElement) {
+    const modalInstance = new Modal(modalElement);
 
+    // 모달이 열릴 때마다 실행되는 이벤트 리스너
+    modalElement.addEventListener('show.bs.modal', () => {
+      attractionName.value = '';
+      attractionDes.value = '';
+      images.value = [];
+      metadataList.value = [];
+    });
+    
+
+  } else {
+    console.error('Modal element with ID myAttractionModal not found.');
+  }
+});
 
 
 

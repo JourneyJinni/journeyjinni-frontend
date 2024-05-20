@@ -12,6 +12,7 @@ const memberStore = useMemberStore()
 const userId = memberStore.userInfo.user_id;
 const currentTripId = ref();
 const modalInstance = ref(null); // 모달 인스턴스를 저장할 ref
+const tripListFlags = ref([]);
 
 //등록할 여행 이름
 const registerTripName = ref("");
@@ -20,6 +21,11 @@ const getUserTrip = () => {
   axios.get("http://localhost/get-usertrip/" + userId)
     .then(({ data }) => {
       myTripList.value = data;
+      const flags = [];
+      for (let i = 0; i < myTripList.value.length; i++){
+        flags.push(false);
+      }
+      tripListFlags.value = flags;
 
     })
     .catch((error) => {
@@ -53,17 +59,26 @@ const  registerTrip = async () => {
 function toggleSidebar() {
   isSidebarVisible.value = !isSidebarVisible.value;
 }
-watch(currentTripId, (newTripId) => {
-      if (newTripId !== null) {
+
+// watch(currentTripId, (newTripId) => {
+//       if (newTripId !== null) {
+//         const modalElement = document.querySelector(`#myAttractionModal`);
+//         if (!modalInstance.value) {
+//           modalInstance.value = new Modal(modalElement);
+//         }
+//         modalInstance.value.show();
+//       }
+// });
+    
+const openAttractionModal =  (tripId) => {
+    currentTripId.value = tripId;
+  if (currentTripId.value !== null) {
         const modalElement = document.querySelector(`#myAttractionModal`);
         if (!modalInstance.value) {
           modalInstance.value = new Modal(modalElement);
         }
         modalInstance.value.show();
       }
-    });
-const openAttractionModal =  (tripId) => {
-      currentTripId.value = tripId;
 }
 </script>
 
@@ -78,6 +93,31 @@ const openAttractionModal =  (tripId) => {
         <h5>나의 여행</h5>
         <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#addTripModal">+</button>
       </div>
+      <div class="list-group" v-for="(trip,index) in myTripList" :key="trip.trip_id">
+      <button
+        @click="tripListFlags[index] = !tripListFlags[index]" 
+        class="list-group-item list-group-item-action"
+        aria-current="true"
+      >
+        <div class="d-flex w-100 justify-content-between">
+          <h8 class="mb-1">{{ trip.trip_name }}</h8>
+          <small>+</small>
+        </div>
+
+      </button>
+      <button class="list-group-item list-group-item-action" v-if="tripListFlags[index]">
+          <div class="d-flex w-100 justify-content-between">
+            <button type="button" class="btn btn-primary"  @click='openAttractionModal(trip.trip_id)'>
+          여행지 추가
+          </button>
+          </div>
+          <p class="mb-1">Some placeholder content in a paragraph.</p>
+          <small class="text-body-secondary">And some muted small print.</small>
+        </button>
+      </div>
+
+
+
       <ul class="list-unstyled components">
         <li v-for="trip in myTripList" :key="trip.trip_id">
           <p> {{trip.trip_name}}</p>
