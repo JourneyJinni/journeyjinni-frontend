@@ -1,7 +1,6 @@
 <script setup>
 import axios from "axios";
 import { onMounted, ref, watch } from 'vue';
-const myTripList = ref([]);
 import { useMemberStore } from "@/stores/member"
 import MyAttractionModal from "@/components/MyAttractionModal.vue";
 import { Modal } from 'bootstrap';
@@ -13,6 +12,8 @@ const userId = memberStore.userInfo.user_id;
 const currentTripId = ref();
 const modalInstance = ref(null); // 모달 인스턴스를 저장할 ref
 const tripListFlags = ref([]);
+const myTripList = ref([]);
+const myAttractionMap = new Map();
 
 //등록할 여행 이름
 const registerTripName = ref("");
@@ -21,17 +22,32 @@ const getUserTrip = () => {
   axios.get("http://localhost/get-usertrip/" + userId)
     .then(({ data }) => {
       myTripList.value = data;
+      
       const flags = [];
       for (let i = 0; i < myTripList.value.length; i++){
         flags.push(false);
+        getUserAttraction(myTripList.value[i].trip_id);
       }
       tripListFlags.value = flags;
+      
+    })
+    .catch((error) => {
+      console.assert(error);
+    })
+}
+
+//여행별 등록한 여행지목록 가져오기
+const getUserAttraction = async (tripId) => {
+  axios.get("http://localhost/get-userattraction/" + tripId)
+    .then(({ data }) => {
+      myAttractionMap.set(tripId, data);
 
     })
     .catch((error) => {
       console.assert(error);
     })
 }
+
 onMounted(() => {
   getUserTrip();
 }) 
@@ -70,8 +86,8 @@ function toggleSidebar() {
 //       }
 // });
     
-const openAttractionModal =  (tripId) => {
-    currentTripId.value = tripId;
+const openAttractionAddModal = (tripId) => {
+  currentTripId.value = tripId;
   if (currentTripId.value !== null) {
         const modalElement = document.querySelector(`#myAttractionModal`);
         if (!modalInstance.value) {
@@ -100,32 +116,26 @@ const openAttractionModal =  (tripId) => {
         aria-current="true"
       >
         <div class="d-flex w-100 justify-content-between">
-          <h8 class="mb-1">{{ trip.trip_name }}</h8>
-          <small>+</small>
+          <p class="mb-1">{{ trip.trip_name }}</p>
+          <small>
+            <button class=""  @click.stop='openAttractionAddModal(trip.trip_id)'>
+              +
+          </button>
+          </small>
         </div>
 
-      </button>
-      <button class="list-group-item list-group-item-action" v-if="tripListFlags[index]">
+      
+      <div v-if='tripListFlags[index]' class='margin-5px'>
+      <button class="list-group-item list-group-item-action"  v-for="attration in myAttractionMap.get(trip.trip_id)" :key='attration.attraction_id'>
           <div class="d-flex w-100 justify-content-between">
-            <button type="button" class="btn btn-primary"  @click='openAttractionModal(trip.trip_id)'>
-          여행지 추가
-          </button>
+            <p class="mb-1">{{ attration.attraction_name }}</p>
           </div>
-          <p class="mb-1">Some placeholder content in a paragraph.</p>
-          <small class="text-body-secondary">And some muted small print.</small>
+
         </button>
       </div>
+    </button>
+      </div>
 
-
-
-      <ul class="list-unstyled components">
-        <li v-for="trip in myTripList" :key="trip.trip_id">
-          <p> {{trip.trip_name}}</p>
-          <button type="button" class="btn btn-primary"  @click='openAttractionModal(trip.trip_id)'>
-          여행지 추가
-          </button>
-        </li>
-      </ul>
     </div>
 
     <MyAttractionModal :trip-id="currentTripId"/>
