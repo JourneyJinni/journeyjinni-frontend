@@ -10,8 +10,12 @@ function categoryInfo(success, fail) {
   local.get(`/getCategory`).then(success).catch(fail);
 }
 
+function getAttractionListByFilter(props, success, fail) {
+  return local.post("/filterlist", props).then(success).catch(fail);
+}
 
 export {
   cityInfo,
   categoryInfo,
+  getAttractionListByFilter
 };
