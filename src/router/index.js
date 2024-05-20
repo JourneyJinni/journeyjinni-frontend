@@ -50,7 +50,7 @@ const router = createRouter({
       component: TripBoardView,
     },
     {
-      path: '/trip/:id',
+      path: '/trip/:tripId',
       name: 'tripdetail',
       component: TripDetail,
       props: true,
