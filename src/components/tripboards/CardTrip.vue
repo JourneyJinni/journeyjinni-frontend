@@ -1,10 +1,10 @@
 <template>
   <div class="card">
-    <img :src="post.image" class="card-img-top" alt="Post Image">
+    <img :src="post.image || 'resources\\images.jpg'" class="card-img-top" alt="대체이미지 설명">
+
     <div class="card-body">
-      <h5 class="card-title">{{ post.title }}</h5>
-      <p class="card-text">{{ post.content }}</p>
-      <router-link :to="{ name: 'tripdetail', params: { id: post.id }}" class="btn btn-primary">자세히 보기</router-link>
+      <h5 class="card-title">{{ post.tripName }}</h5>
+      <router-link :to="{ name: 'tripdetail', params: { tripId: post.tripId }}" class="btn btn-primary">자세히 보기</router-link>
     </div>
   </div>
 </template>
