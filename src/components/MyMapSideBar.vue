@@ -1,14 +1,18 @@
 <script setup>
 import axios from "axios";
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 const myTripList = ref([]);
 import { useMemberStore } from "@/stores/member"
 import MyAttractionModal from "@/components/MyAttractionModal.vue";
+import { Modal } from 'bootstrap';
 //사이드바 토글
 const isSidebarVisible = ref(false);
 //유저 아이디 불러오기
 const memberStore = useMemberStore()
 const userId = memberStore.userInfo.user_id;
+const currentTripId = ref();
+const modalInstance = ref(null); // 모달 인스턴스를 저장할 ref
+const tripListFlags = ref([]);
 
 //등록할 여행 이름
 const registerTripName = ref("");
@@ -17,7 +21,12 @@ const getUserTrip = () => {
   axios.get("http://localhost/get-usertrip/" + userId)
     .then(({ data }) => {
       myTripList.value = data;
-      console.log(myTripList.value);
+      const flags = [];
+      for (let i = 0; i < myTripList.value.length; i++){
+        flags.push(false);
+      }
+      tripListFlags.value = flags;
+
     })
     .catch((error) => {
       console.assert(error);
@@ -50,22 +59,26 @@ const  registerTrip = async () => {
 function toggleSidebar() {
   isSidebarVisible.value = !isSidebarVisible.value;
 }
-//여행지(관광지) 등록
-const registerAttraction = async () => {
-  
-  const formData = new FormData();
-  formData.append("userId", userId);
-  formData.append("tripName", registerTripName.value);
 
-  try {
-    const response = await axios.post('http://localhost/register-attraction', formData, {
-    });
-    console.log(response.data);
-  } catch (error) {
-    console.log(error);
-  }
-  registerTripName.value = ""
-  getUserTrip();
+// watch(currentTripId, (newTripId) => {
+//       if (newTripId !== null) {
+//         const modalElement = document.querySelector(`#myAttractionModal`);
+//         if (!modalInstance.value) {
+//           modalInstance.value = new Modal(modalElement);
+//         }
+//         modalInstance.value.show();
+//       }
+// });
+    
+const openAttractionModal =  (tripId) => {
+    currentTripId.value = tripId;
+  if (currentTripId.value !== null) {
+        const modalElement = document.querySelector(`#myAttractionModal`);
+        if (!modalInstance.value) {
+          modalInstance.value = new Modal(modalElement);
+        }
+        modalInstance.value.show();
+      }
 }
 </script>
 
@@ -80,17 +93,42 @@ const registerAttraction = async () => {
         <h5>나의 여행</h5>
         <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#addTripModal">+</button>
       </div>
+      <div class="list-group" v-for="(trip,index) in myTripList" :key="trip.trip_id">
+      <button
+        @click="tripListFlags[index] = !tripListFlags[index]" 
+        class="list-group-item list-group-item-action"
+        aria-current="true"
+      >
+        <div class="d-flex w-100 justify-content-between">
+          <h8 class="mb-1">{{ trip.trip_name }}</h8>
+          <small>+</small>
+        </div>
+
+      </button>
+      <button class="list-group-item list-group-item-action" v-if="tripListFlags[index]">
+          <div class="d-flex w-100 justify-content-between">
+            <button type="button" class="btn btn-primary"  @click='openAttractionModal(trip.trip_id)'>
+          여행지 추가
+          </button>
+          </div>
+          <p class="mb-1">Some placeholder content in a paragraph.</p>
+          <small class="text-body-secondary">And some muted small print.</small>
+        </button>
+      </div>
+
+
+
       <ul class="list-unstyled components">
         <li v-for="trip in myTripList" :key="trip.trip_id">
           <p> {{trip.trip_name}}</p>
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" :data-bs-target="trip.trip_id">
+          <button type="button" class="btn btn-primary"  @click='openAttractionModal(trip.trip_id)'>
           여행지 추가
           </button>
-          <MyAttractionModal :trip-id="trip.trip_id"/>
         </li>
       </ul>
     </div>
 
+    <MyAttractionModal :trip-id="currentTripId"/>
     <!-- 여행 추가 모달 -->
   <div class="modal fade" id="addTripModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
