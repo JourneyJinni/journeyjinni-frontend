@@ -1,6 +1,6 @@
 <script setup>
 
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import axios from 'axios';
 import imageCompression from 'browser-image-compression';
 import exifr from 'exifr';
@@ -9,13 +9,12 @@ import { Modal } from 'bootstrap';
 // props 정의
 const props = defineProps({
   tripId: {
-    type: [String, Number],
-    required: true
+    type: String,
+    default: null
   }
-  
 });
 
-console.log(props.tripId)
+const thisTripId = ref();
 const images = ref([]);
 const metadataList = ref([]);
 const attractionName = ref("");
@@ -71,7 +70,8 @@ const submitForm = async () => {
     formData.append('metadata', JSON.stringify(metadataList.value[index]));
     
     });
-    formData.append('tripId', props.tripId.value);
+    formData.append('tripId', props.tripId);
+    console.log(props.tripId);
     formData.append('attractionName', attractionName.value);
     formData.append('attractionDes', attractionDes.value);
     try {
@@ -89,7 +89,6 @@ const submitForm = async () => {
 onMounted(() => {
   const modalElement = document.getElementById('myAttractionModal');
   if (modalElement) {
-    const modalInstance = new Modal(modalElement);
 
     // 모달이 열릴 때마다 실행되는 이벤트 리스너
     modalElement.addEventListener('show.bs.modal', () => {
@@ -121,6 +120,7 @@ onMounted(() => {
         <div class="modal-body">
           <form id="travelForm">
             <div class="mb-3">
+              {{ props.tripId }}
               <label for="destinationName" class="form-label">여행지 이름</label>
               <input type="text" class="form-control" id="destinationName" placeholder="여행지 이름을 입력하세요" v-model="attractionName">
             </div>
@@ -136,7 +136,7 @@ onMounted(() => {
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-          <button type="button" class="btn btn-primary" @click="submitForm">확인</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="submitForm">확인</button>
         </div>
       </div>
     </div>
