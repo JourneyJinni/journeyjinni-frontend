@@ -8,9 +8,9 @@ const gugunList = ref([]);
 const categoryList = ref([]);
 const isSearch = ref(false);
 
-const sido = ref();
-const gugun = ref();
-const attractionType = ref();
+const sido = ref("0");
+const gugun = ref("0");
+const attractionType = ref("0");
 const selectedSido = ref();
 const selectedGugun = ref();
 const selectedAttractionType = ref();
@@ -67,7 +67,7 @@ axios.get("http://localhost/getcategory")
                 <option v-for="city in cityList" :key="city.code" :value="city.code">{{ city.name }}</option>
             </select>
             <select id="search-area-detail" class="form-select w-25 me-2" v-model="gugun">
-                <option value="0" selected>시/군/구</option>
+                <option value="0">시/군/구</option>
                 <option v-for="gugun in gugunList" :key="gugun.gugunCode" :value="gugun.gugunCode">{{ gugun.name }}</option>
             </select>
             <select id="search-content-id" class="form-select w-25 me-2" v-model="attractionType">
@@ -77,7 +77,7 @@ axios.get("http://localhost/getcategory")
             <input id="search-keyword" class="form-control form-control-lg me-5" type="search" placeholder="검색어"
                 aria-label="검색어" />
                 <button id="btn-search" class="btn btn-outline-success" type="button" @click='searchStart'>검색</button>
-            
+
           </form>
         <!-- kakao map end -->
         <!-- 관광지 검색 end -->
