@@ -19,13 +19,16 @@ const onlyAuthUser = async (to, from, next) => {
   const { getUserInfo } = memberStore;
 
   let token = sessionStorage.getItem("accessToken");
-
-  if (userInfo.value != null && token) {
-    await getUserInfo(token);
+  if (token == null) {
+    alert("로그인 해주세요!")
+    next({ name: "login" });
   }
+  await getUserInfo(token);
   if (!isValidToken.value || userInfo.value === null) {
-    next({ name: "user-login" });
+    alert("로그인 해주세요!")
+    next({ name: "login" });
   } else {
+    console.log("인증!" + token);
     next();
   }
 };
@@ -70,11 +73,13 @@ const router = createRouter({
       path: '/mymap',
       name: 'my-map',
       component: MyMapView,
+      beforeEnter: onlyAuthUser,
     },
     {
       path: '/mypage',
       name: 'mypage',
-      component: MyPage
+      component: MyPage,
+      beforeEnter: onlyAuthUser,
     },
     {
       path: "/board",
