@@ -4,7 +4,7 @@ import { onMounted, ref, watch } from 'vue';
 import { useMemberStore } from "@/stores/member"
 import MyAttractionModal from "@/components/main/MyAttractionModal.vue";
 import MyTripSettingModal from '@/components/MyTripSettingModal.vue';
-
+import MyAttractionSettingModal from '@/components/MyAttractionSettingModal.vue'
 import { Modal } from 'bootstrap';
 //사이드바 토글
 const isSidebarVisible = ref(false);
@@ -12,11 +12,12 @@ const isSidebarVisible = ref(false);
 const memberStore = useMemberStore()
 const userId = memberStore.userInfo.user_id;
 const currentTripId = ref();
-const modalInstance = ref(null); // 모달 인스턴스를 저장할 ref
+// const modalInstance = ref(null); // 모달 인스턴스를 저장할 ref
 const tripListFlags = ref([]);
 const myTripList = ref([]);
 const myAttractionMap = new Map();
-
+const currentTrip = ref({});
+const currentAttraction = ref({});
 
 //등록할 여행 이름
 const registerTripName = ref("");
@@ -80,16 +81,7 @@ function toggleSidebar() {
 }
 
     
-const openAttractionAddModal = (tripId) => {
-  currentTripId.value = tripId;
-  if (currentTripId.value !== null) {
-        const modalElement = document.querySelector(`#myAttractionModal`);
-        if (!modalInstance.value) {
-          modalInstance.value = new Modal(modalElement);
-        }
-        modalInstance.value.show();
-      }
-}
+
 
 const deleteAttraction = (attraction_id) => {
   axios.delete("http://localhost/delete-userattraction/" + attraction_id)
@@ -108,6 +100,41 @@ const refreshAttractions = () => {
   getUserTrip();
   emit('refreshAttractions');
 }
+
+const openAttractionAddModal = (tripId) => {
+  currentTripId.value = tripId;
+  if (currentTripId.value !== null) {
+    const modalElement = document.querySelector(`#myAttractionModal`);
+    const modalInstance = ref();
+    if (!modalInstance.value) {
+      modalInstance.value = new Modal(modalElement);
+    }
+    modalInstance.value.show();
+  }
+};
+
+const openTripSettingModal = (trip) => {
+  currentTrip.value = trip;
+  if (currentTrip.value !== null) {
+    const modalElement = document.querySelector(`#settingTripModal`);
+    const modalInstance = ref();
+    if (!modalInstance.value) {
+      modalInstance.value = new Modal(modalElement);
+    }
+    modalInstance.value.show();
+  }
+};
+const openAttractionSettingModal = (attraction) => {
+  currentAttraction.value = attraction;
+  if (currentTrip.value !== null) {
+    const modalElement = document.querySelector(`#myAttractionSettingModal`);
+    const modalInstance = ref();
+    if (!modalInstance.value) {
+      modalInstance.value = new Modal(modalElement);
+    }
+    modalInstance.value.show();
+  }
+};
 </script>
 
 
@@ -130,15 +157,20 @@ const refreshAttractions = () => {
       <button
         @click="tripListFlags[index] = !tripListFlags[index]" 
         class="list-group-item list-group-item-action"
-        aria-current="true"
-      >
+        aria-current="true">
         <div class="d-flex w-100 justify-content-between">
           <p class="mb-1">{{ trip.trip_name }}</p>
-          <small>
-            <button class="btn btn-sm" @click.stop="openAttractionAddModal(trip.trip_id)">
-              +
-            </button>
-          </small>
+
+          <button class="btn btn-sm setting-button" @click.stop="openTripSettingModal(trip)">
+            <img src="@/assets/settingIcon.png" alt="Setting Attraction">
+          </button>
+          
+          <button class="btn btn-sm" @click.stop="openAttractionAddModal(trip.trip_id)">
+            +
+          </button>
+
+         
+
         </div>
         <div v-if="tripListFlags[index]" class="margin-5px">
           <button
@@ -150,8 +182,8 @@ const refreshAttractions = () => {
           >
             <div class="d-flex w-100 justify-content-between">
               <p class="mb-1">{{ attraction.attraction_name }}</p>
-              <button class="btn btn-sm delete-button" @click.stop="deleteAttraction(attraction.attraction_id)">
-                <img src="@/assets/settingIcon.png" alt="Delete Attraction">  
+              <button class="btn btn-sm setting-button" @click.stop="openAttractionSettingModal(attraction)">
+                <img src="@/assets/settingIcon.png" alt="Setting Attraction">  
               </button>
               
             </div>
@@ -162,11 +194,6 @@ const refreshAttractions = () => {
     </div>
   </div>
 
-  
-  <MyAttractionModal :trip-id="currentTripId" @refresh-attractions="refreshAttractions"/>
-  <MyTripSettingModa :trip-id="currentTripId"/>
-  
-    <!-- 여행 추가 모달 -->
   <div class="modal fade" id="addTripModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -179,12 +206,16 @@ const refreshAttractions = () => {
           <input type="text" v-model="registerTripName">
         </div>
         <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="registerTrip">확인</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="registerTrip">등록</button>
         </div>
       </div>
     </div>
   </div>
+  
+  <MyAttractionModal :trip-id="currentTripId" @refresh-attractions="refreshAttractions"/>
+  <MyTripSettingModal :trip="currentTrip" @refresh-attractions="refreshAttractions"/>
+  <MyAttractionSettingModal :attraction="currentAttraction" @refresh-attractions="refreshAttractions"/>
 
 
 </div>
@@ -290,7 +321,7 @@ const refreshAttractions = () => {
       height: 50px; /* 이미지의 높이 조정 */
     }
     /* 이미지 버튼을 오른쪽으로 이동시킵니다. */
-    .delete-button img{
+    .setting-button img{
       margin-left: auto; /* 자동 마진을 사용하여 오른쪽으로 이동시킵니다. */
       width: 20px; /* 이미지 크기를 조절하세요 */
       height: 20px; /* 이미지 크기를 조절하세요 */
