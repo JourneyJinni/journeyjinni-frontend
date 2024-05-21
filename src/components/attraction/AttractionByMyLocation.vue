@@ -1,8 +1,23 @@
 <template>
   <div>
-    내 위치 기반
-    <!-- "내 위치" 버튼 -->
-    <button @click="sendLocation">내 위치</button>
+    <div class="col-md-12">
+      <div class="container mt-3">
+        <div class="card text-center shadow-sm p-2 mb-5 bg-body-tertiary rounded">
+          <div class="card-body">
+            <h5 class="card-title fw-bold">내 위치 기반으로 관광지 찾기</h5>
+            <p class="card-text text-muted">현재 접속하신 기기의 GPS 신호를 기반으로 주변 관광지를 조회합니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-10">
+      <!-- Default style button -->
+      <button @click="sendLocation" class="btn btn-primary me-2">
+        <img src="@/assets/marker/attraction.png" alt="지도 아이콘" class="me-2"> 위치 활용
+      </button>
+    </div>
+
+
   </div>
 </template>
 

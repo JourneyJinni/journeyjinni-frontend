@@ -75,9 +75,15 @@ const getGugun = (event) => {
 
 <template>
     <div class="col-md-12">
-        <div class="alert alert-primary mt-3 text-center fw-bold" role="alert">
-            전국 관광지 정보
+      <div class="container mt-3">
+        <div class="card text-center shadow-sm p-2 mb-5 bg-body-tertiary rounded">
+          <div class="card-body">
+            <h5 class="card-title fw-bold">도시와 유형으로 관광지 찾기</h5>
+            <p class="card-text text-muted">시/도/군별 검색과 관광지 유형에 대해 검색이 가능합니다.</p>
+          </div>
         </div>
+      </div>
+
         <!-- 관광지 검색 start -->
         <form class="d-flex my-3" onsubmit="return false;" role="search">
             <select id="search-area" class="form-select w-25 me-2" @change="getGugun" v-model="sido">

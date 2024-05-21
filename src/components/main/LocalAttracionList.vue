@@ -1,5 +1,7 @@
 <template>
 
+  
+
   <div class="container-fluid" id="main1_div">
     <div class="row align-items-center position-relative text-center">
       <h2 class="text-secondary fw-bolder mt-1">여기는 어떠세요?</h2>
