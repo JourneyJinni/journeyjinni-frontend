@@ -3,6 +3,8 @@ import axios from "axios";
 import { onMounted, ref, watch } from 'vue';
 import { useMemberStore } from "@/stores/member"
 import MyAttractionModal from "@/components/main/MyAttractionModal.vue";
+import MyTripSettingModal from '@/components/MyTripSettingModal.vue';
+
 import { Modal } from 'bootstrap';
 //사이드바 토글
 const isSidebarVisible = ref(false);
@@ -14,6 +16,7 @@ const modalInstance = ref(null); // 모달 인스턴스를 저장할 ref
 const tripListFlags = ref([]);
 const myTripList = ref([]);
 const myAttractionMap = new Map();
+
 
 //등록할 여행 이름
 const registerTripName = ref("");
@@ -76,15 +79,6 @@ function toggleSidebar() {
   isSidebarVisible.value = !isSidebarVisible.value;
 }
 
-// watch(currentTripId, (newTripId) => {
-//       if (newTripId !== null) {
-//         const modalElement = document.querySelector(`#myAttractionModal`);
-//         if (!modalInstance.value) {
-//           modalInstance.value = new Modal(modalElement);
-//         }
-//         modalInstance.value.show();
-//       }
-// });
     
 const openAttractionAddModal = (tripId) => {
   currentTripId.value = tripId;
@@ -105,9 +99,14 @@ const deleteAttraction = (attraction_id) => {
   })
 }
 
-const emit = defineEmits(['moveToMarker'])
+const emit = defineEmits(['moveToMarker','refreshAttractions'])
 const moveToMarker = (attractionId) => {
-  this.emit('moveToMarker',attractionId)
+    emit('moveToMarker',attractionId)
+}
+
+const refreshAttractions = () => {
+  getUserTrip();
+  emit('refreshAttractions');
 }
 </script>
 
@@ -115,7 +114,7 @@ const moveToMarker = (attractionId) => {
 
 <template>
   <div id="app">
-    <button class="image-button" @click="toggleSidebar" v-show="!isSidebarVisible">
+    <button class="btn btn-sm image-button" @click="toggleSidebar" v-show="!isSidebarVisible">
       <img src="@/assets/sidebar_MyMap.png" alt="Toggle Sidebar">
     </button>
 
@@ -136,7 +135,7 @@ const moveToMarker = (attractionId) => {
         <div class="d-flex w-100 justify-content-between">
           <p class="mb-1">{{ trip.trip_name }}</p>
           <small>
-            <button class="" @click.stop="openAttractionAddModal(trip.trip_id)">
+            <button class="btn btn-sm" @click.stop="openAttractionAddModal(trip.trip_id)">
               +
             </button>
           </small>
@@ -151,9 +150,10 @@ const moveToMarker = (attractionId) => {
           >
             <div class="d-flex w-100 justify-content-between">
               <p class="mb-1">{{ attraction.attraction_name }}</p>
-              <button class="delete-button" @click.stop="deleteAttraction(attraction.attraction_id)">
-                <img src="@/assets/delete.png" alt="Delete Attraction">
+              <button class="btn btn-sm delete-button" @click.stop="deleteAttraction(attraction.attraction_id)">
+                <img src="@/assets/settingIcon.png" alt="Delete Attraction">  
               </button>
+              
             </div>
             
           </button>
@@ -162,8 +162,10 @@ const moveToMarker = (attractionId) => {
     </div>
   </div>
 
-
-    <MyAttractionModal :trip-id="currentTripId" @refresh-attractions="getUserTrip"/>
+  
+  <MyAttractionModal :trip-id="currentTripId" @refresh-attractions="refreshAttractions"/>
+  <MyTripSettingModa :trip-id="currentTripId"/>
+  
     <!-- 여행 추가 모달 -->
   <div class="modal fade" id="addTripModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -282,14 +284,15 @@ const moveToMarker = (attractionId) => {
       cursor: pointer;
     }
 
+
     .image-button img {
-      width: 50px; /* 이미지 크기를 조절하세요 */
-      height: 50px; /* 이미지 크기를 조절하세요 */
+      width: 50px; /* 이미지의 너비 조정 */
+      height: 50px; /* 이미지의 높이 조정 */
     }
     /* 이미지 버튼을 오른쪽으로 이동시킵니다. */
-    .delete-button {
+    .delete-button img{
       margin-left: auto; /* 자동 마진을 사용하여 오른쪽으로 이동시킵니다. */
-      width: 10px; /* 이미지 크기를 조절하세요 */
-      height: 10px; /* 이미지 크기를 조절하세요 */
+      width: 20px; /* 이미지 크기를 조절하세요 */
+      height: 20px; /* 이미지 크기를 조절하세요 */
     }
 </style>

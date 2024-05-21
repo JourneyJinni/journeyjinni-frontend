@@ -1,112 +1,95 @@
 <template>
-  <nav class="navbar navbar-expand-sm shadow bg-light navbar-light sticky-top">
-      <div class="container-fluid">
-        <a class="navbar-brand text-primary fw-bold" href="/">
-          <img src="@/assets/logo.png" 
-          alt="Logo" 
-          width="150" 
-          height='50'
-          class="d-inline-block">
-          
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-        
-
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <router-link :to="{name : 'board'}"  class="nav-link">게시판</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link :to="{name : 'attraction'}" class="nav-link">관광지 검색</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link :to="{name : 'tripboard'}" class="nav-link">여행 코스</router-link>
-            </li>
-          </ul>
-
-          <ul class="navbar-nav ms-auto me-2" id="logout-nav">
-          </ul>
-
+  <nav class="navbar navbar-expand-sm shadow bg-light navbar-light sticky-top custom-navbar">
+    <div class="container-fluid">
+      <a class="navbar-brand text-primary fw-bold" href="/">
+        <img src="@/assets/logo.png" 
+             alt="Logo" 
+             width="150" 
+             height='50'
+             class="d-inline-block">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <router-link :to="{ name: 'board' }" class="nav-link">게시판</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link :to="{ name: 'attraction' }" class="nav-link">관광지 검색</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link :to="{ name: 'tripboard' }" class="nav-link">여행 코스</router-link>
+          </li>
+        </ul>
+        <div class="ms-auto">
           <div v-if="token">
-            <ul class="navbar-nav ms-auto me-2" id="login-nav">
+            <ul class="navbar-nav" id="login-nav">
               <li class="nav-item">
-                <router-link :to="{name : 'mypage'}" class="nav-link">{{ name }}님 환영합니다.</router-link>
+                <router-link :to="{ name: 'mypage' }" class="nav-link">{{ name }}님 환영합니다.</router-link>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" id="logout" @click="userLogout()">로그아웃</a>
+                <a class="nav-link" href="#" @click="userLogout">로그아웃</a>
               </li>
               <li class="nav-item">
-                <router-link :to="{name : 'my-map'}" class="nav-link">나의 여행지도</router-link>
+                <router-link :to="{ name: 'my-map' }" class="nav-link">나의 여행지도</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{name : 'mypage'}" class="nav-link">마이페이지</router-link>
+                <router-link :to="{ name: 'mypage' }" class="nav-link">마이페이지</router-link>
               </li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">내 정보</a>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#" id="myInfo">확인/수정</a></li>
-                  <li><a class="dropdown-item text-danger" href=# id="del_user" @click="deleteUser(user_id)">회원 탈퇴</a></li>
+                  <li><a class="dropdown-item" href="#">확인/수정</a></li>
+                  <li><a class="dropdown-item text-danger" href="#" @click="deleteUser(user_id)">회원 탈퇴</a></li>
                 </ul>
               </li>
             </ul>
           </div>
           <div v-else>
-              <ul class="navbar-nav ms-auto me-2" id="logout-nav">
-                <li class="nav-item">
-                  <router-link :to="{name : 'login'}" class="nav-link">로그인</router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{name : 'signup'}" class="nav-link">회원가입</router-link>
-                </li>
-              </ul>
+            <ul class="navbar-nav" id="logout-nav">
+              <li class="nav-item">
+                <router-link :to="{ name: 'login' }" class="nav-link">로그인</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link :to="{ name: 'signup' }" class="nav-link">회원가입</router-link>
+              </li>
+            </ul>
           </div>
-
-
         </div>
       </div>
-    </nav>
+    </div>
+  </nav>
 </template>
 
-
 <script setup>
-import { computed  } from 'vue';
+import { computed } from 'vue';
 import { useMemberStore } from "@/stores/member"
 
-const memberStore = useMemberStore()
-const { userLogout, username, deleteUser, userId } = memberStore
+const memberStore = useMemberStore();
+const { userLogout, deleteUser } = memberStore;
 
-
-const token = computed(() => {
-  console.log("token : ", sessionStorage.getItem("accessToken"));
-  console.log("validToken : ", memberStore.isValidToken);
-
-  return sessionStorage.getItem("accessToken") !== null && memberStore.isValidToken;
-});
+const token = computed(() => sessionStorage.getItem("accessToken") !== null && memberStore.isValidToken);
 
 const name = computed(() => memberStore.username);
-
 const user_id = computed(() => memberStore.userId);
 </script>
 
 <style scoped>
-.logo {
-  height: 40px;
-  margin-right: 20px; /* 로고 오른쪽 마진 */
+.custom-navbar {
+  padding: 0.5rem 1rem; /* 상단과 하단 패딩 조정 */
 }
 
-.bg-white {
-  padding-left: 20px; /* 왼쪽 마진 */
-  padding-right: 20px; /* 오른쪽 마진 */
+.navbar-brand img {
+  max-height: 40px; /* 로고의 최대 높이 조정 */
 }
 
-.search-form {
-  margin-right: auto; /* 다른 요소를 오른쪽 끝으로 밀기 위해 사용 */
+.nav-link {
+  padding: 0.5rem; /* 네비게이션 링크의 패딩 조정 */
 }
 
-.b-form-input {
-  margin-right: 10px; /* 검색 버튼과 검색창 간의 간격 */
+.navbar-nav .nav-item {
+  margin: 0 0.5rem; /* 네비게이션 아이템 간의 간격 조정 */
 }
 </style>

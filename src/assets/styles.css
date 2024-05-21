@@ -25,16 +25,7 @@ a:hover {
     text-decoration: underline;
 }
 
-/* 버튼 스타일 커스터마이징 */
-button {
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
+
 
 button:hover {
     background-color: #2980b9;
@@ -65,7 +56,6 @@ button:hover {
 .container-fluid {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
 }
 
 /* 유틸리티 클래스 */
