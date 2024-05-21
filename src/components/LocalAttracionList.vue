@@ -36,10 +36,10 @@
     </div>
   </div>
   <div>
-    <button type="button" class="btn btn-primary btn-sm" @click='showModalMthod'> 모달열기</button>
+    <!-- <button type="button" class="btn btn-primary btn-sm" @click='showModalMthod'> 모달열기</button>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
     
-    <AttractionModal :show-modal='showModal'/>
+    <AttractionModal :show-modal='showModal'/> -->
 
 </div>
 </template>
