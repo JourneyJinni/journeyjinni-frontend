@@ -3,7 +3,7 @@
     <h1 class="text-center my-5">여행 코스</h1>
     <div class="row">
       <div class="col-md-4" v-for="(post, tripId) in posts" :key="tripId">
-        <CardTrip :post="post" />
+        <CardTrip :trip="post" />
       </div>
     </div>
   </div>
@@ -11,7 +11,7 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { getTrip } from "@/api/Trip.js";
+import {getTrip, getTripImages} from "@/api/Trip.js";
 import CardTrip from "@/components/tripboards/CardTrip.vue";
 
 const posts = ref([]);
@@ -26,6 +26,8 @@ const trips = async () => {
         console.log("여행 코스들을 가져오는데 실패했습니다.")
       }
   );
+
+
 };
 
 onMounted(() => {
