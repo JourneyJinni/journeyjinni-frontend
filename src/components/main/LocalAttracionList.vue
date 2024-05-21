@@ -1,15 +1,14 @@
 <template >
-    <div class="container-fluid p-3">
-      <div class="container-fluid" id="main1_div">
-        <div class="row row align-items-center position-relative text-center">
-          <h2 class="text-secondary fw-bolder mt-2">여기는 어떠세요?</h2>
-          <h4>우리나라 곳곳의 명소입니다.</h4>
-          <div class="col-lg-9 col-12">
-          </div>
+
+    <div class="container-fluid" id="main1_div">
+      <div class="row align-items-center position-relative text-center">
+        <h2 class="text-secondary fw-bolder mt-1">여기는 어떠세요?</h2>
+        <h4>우리나라 곳곳의 명소입니다.</h4>
+        <div class="card-footer">
+          <router-link :to="{name : 'attraction'}" class="btn btn-primary stretched-link">더 많은 관광지 검색</router-link>
         </div>
       </div>
-  </div>
-
+    </div>
   <!-- 각 카드 실행 -->
   <div class="container-fluid">
     <div class="col-md-12 mt-3">
