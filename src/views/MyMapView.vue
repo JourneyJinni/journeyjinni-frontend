@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <MyMapSideBar/>
+    <MyMapSideBar @move-to-marker="onMoveToMarker" @refresh-attractions="fetchImage"/>
   <div class="container">
     <KakaoMap :lat="coordinate.lat" :lng="coordinate.lng" :draggable="true">
         <span v-for="image in images" :key='image.image_id'>
@@ -52,4 +52,14 @@ const fetchImage = async () => {
 onMounted(() => {
   fetchImage();
 })
+
+const onMoveToMarker = (attractionId) => {
+  for (let i = 0; i < images.value.length; i++){
+    if (images.value[i].attraction_id == attractionId) {
+      coordinate.value.lat = images.value[i].latitude;
+      coordinate.value.lng = images.value[i].longitude;
+      break
+    }
+  }
+}
 </script>
