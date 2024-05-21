@@ -19,7 +19,8 @@
 <script setup>
 
 </script>
-<style scope>
+
+<style scoped>
   #header_div {
   height: 400px; /* 필요에 따라 높이 조정 */
   overflow: hidden;

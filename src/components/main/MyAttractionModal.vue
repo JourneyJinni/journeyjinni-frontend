@@ -132,6 +132,7 @@ onMounted(() => {
               <label for="destinationDescription" class="form-label">여행지 설명</label>
               <textarea class="form-control" id="destinationDescription" rows="3" placeholder="여행지 설명을 입력하세요" v-model="attractionDes"></textarea>
             </div>
+            <!--  이미지 업로드           -->
             <div class="mb-3">
               <label for="destinationImages" class="form-label">이미지 업로드</label>
               <input class="form-control" type="file" id="destinationImages" accept="image/*" @change="handleImageUpload" multiple>
