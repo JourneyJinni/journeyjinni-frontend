@@ -56,8 +56,6 @@ const setMap = (latitude, longitude) => {
 
 watch(() => attractionStore.searchedList, () => {
   console.log("list", attractionStore.searchedList)
-
-  // 아무 동작 없이도 재 렌더링이 발생합니다.
 });
 
 </script>

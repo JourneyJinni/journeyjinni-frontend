@@ -13,7 +13,7 @@
                 aria-controls="AttractionByCityAndCategory"
                 aria-selected="true"
             >
-              도시와 유형으로 관광지 찾기
+              <b>도시와 유형으로 관광지 찾기</b>
             </a>
           </li>
         </ul>
@@ -30,7 +30,7 @@
                 aria-controls="AttractionByImageLocation"
                 aria-selected="false"
             >
-              사진 기반으로 관광지 찾기
+              <b>사진 기반으로 관광지 찾기</b>
             </a>
           </li>
         </ul>
@@ -47,7 +47,7 @@
                 aria-controls="AttractionByMyLocation"
                 aria-selected="false"
             >
-              내 위치 기반으로 관광지 찾기
+              <b>내 위치 기반으로 관광지 찾기</b>
             </a>
           </li>
         </ul>

@@ -1,7 +1,6 @@
 <script setup>
 import axios from 'axios';
 import { ref } from 'vue'
-import AttractionSearchList from '@/components/attraction/AttractionSearchList.vue';
 import {getAttractionListByFilter} from "@/api/attraction.js";
 import { useAttractionStore } from "@/stores/Attraction.js";
 
