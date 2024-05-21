@@ -1,19 +1,23 @@
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, computed} from 'vue';
 import { defineProps } from 'vue';
-import {getTripDetails, getAttractionImages, getTrip} from '@/api/Trip.js';
+import {getTripDetails, getAttractionImages} from '@/api/Trip.js';
 
 const props = defineProps({
   tripId: {
     type: String,
     required: true
+  },
+  tripName: {
+    type: String,
+    default: "여행 기록"
   }
 });
 
-const tripName = ref('여행 정보');
 const attractions = ref([]);
 const selectedAttractionImages = ref([]);
+let attractionName;
 
 const fetchTripDetails = async () => {
   console.log("해당 tripDetail 정보를 가지러 감 . " , props.tripId)
@@ -21,15 +25,17 @@ const fetchTripDetails = async () => {
       props.tripId,
       (success) => {
         attractions.value = success.data;
-        console.log("attractions : ", attractions.value)
+        console.log("attractions : ", props.tripId)
       },(error) => {
         console.log("여행 코스들을 가져오는데 실패했습니다." , error)
       }
   );
 };
 
-const fetchImageDetail = async (attractionId) => {
+const fetchImageDetail = async (attractionId, name) => {
   console.log("tripImage 정보를 가지러 감")
+
+  attractionName = name + "의 기록";
   getAttractionImages(
       attractionId,
       (success) => {
@@ -39,10 +45,6 @@ const fetchImageDetail = async (attractionId) => {
         console.log("관광지 세부정보를 가져오는데 실패했습니다." , error)
       }
   );
-};
-
-const imageSrc = (imageData) => {
-  return `data:image/jpeg;base64,${btoa(String.fromCharCode(...new Uint8Array(imageData)))}`;
 };
 
 const formatDate = (date) => {
@@ -56,11 +58,11 @@ onMounted(() => {
 
 <template>
   <div class="container my-5">
-    <h1 class="text-center mb-4">{{ tripName }}</h1>
+    <h1 class="text-center mb-4">{{ props.tripName }}</h1>
     <div class="row">
       <!-- 관광지 리스트 -->
       <div class="col-md-4" v-for="attraction in attractions" :key="attraction.attractionId">
-        <div class="card mb-3" @click="fetchImageDetail(attraction.attractionId)">
+        <div class="card mb-3" @click="fetchImageDetail(attraction.attractionId,  attraction.attractionName)">
           <div class="card-body">
             <h5 class="card-title">{{ attraction.attractionName }}</h5>
             <p class="card-text"> {{ attraction.attractionDescription }}</p>
@@ -72,9 +74,7 @@ onMounted(() => {
 
     <section class="gallery-block compact-gallery">
       <div class="container">
-        <div class="heading">
-          <h2>{{ tripName }}</h2>
-        </div>
+        <h3 class="text-center mb-4">{{attractionName}}</h3>
         <div class="row no-gutters">
           <div v-for="image in selectedAttractionImages" :key="image.imageId" class="col-md-6 col-lg-4 item zoom-on-hover">
             <a class="lightbox" :href="'data:image/jpeg;base64,' + image.image">

@@ -11,9 +11,13 @@ function getTripDetails(tripId, success,fail) {
 }
 
 function getAttractionImages(attractionId, success, fail){
-     local.get(`/tripboard/getTripImage/${attractionId}`).then(success).catch(fail);
+     local.get(`/tripboard/getTripImageByAttraction/${attractionId}`).then(success).catch(fail);
+}
+
+function getTripImages(tripId, success, fail) {
+    local.get(`/tripboard/getTripImageByTrip/${tripId}`).then(success).catch(fail);
 }
 
 export {
-    getTrip,getTripDetails,getAttractionImages
+    getTrip,getTripDetails,getAttractionImages,getTripImages
 };
