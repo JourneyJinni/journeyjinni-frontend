@@ -2,7 +2,7 @@
 import axios from "axios";
 import { onMounted, ref, watch } from 'vue';
 import { useMemberStore } from "@/stores/member"
-import MyAttractionModal from "@/components/MyAttractionModal.vue";
+import MyAttractionModal from "@/components/main/MyAttractionModal.vue";
 import { Modal } from 'bootstrap';
 //사이드바 토글
 const isSidebarVisible = ref(false);
