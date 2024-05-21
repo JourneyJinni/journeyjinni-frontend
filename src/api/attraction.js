@@ -14,8 +14,14 @@ function getAttractionListByFilter(props, success, fail) {
   return local.post("/filterlist", props).then(success).catch(fail);
 }
 
+// 위치를 기반으로 리스트를 반환한다.
+function getLocationList(coordinate, success, fail) {
+  local.post("/nowLocation", coordinate).then(success).catch(fail);
+}
+
 export {
   cityInfo,
   categoryInfo,
-  getAttractionListByFilter
+  getAttractionListByFilter,
+  getLocationList
 };
