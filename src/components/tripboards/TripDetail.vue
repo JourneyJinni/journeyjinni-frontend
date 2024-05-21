@@ -3,7 +3,6 @@
 import { ref, onMounted } from 'vue';
 import { defineProps } from 'vue';
 import {getTripDetails, getAttractionImages, getTrip} from '@/api/Trip.js';
-import  alterImg  from '@/assets/images.jpg'
 
 const props = defineProps({
   tripId: {
@@ -14,7 +13,6 @@ const props = defineProps({
 
 const tripName = ref('여행 정보');
 const attractions = ref([]);
-const selectedAttraction = ref(null);
 const selectedAttractionImages = ref([]);
 
 const fetchTripDetails = async () => {
@@ -65,11 +63,12 @@ onMounted(() => {
         <div class="card mb-3" @click="fetchImageDetail(attraction.attractionId)">
           <div class="card-body">
             <h5 class="card-title">{{ attraction.attractionName }}</h5>
-            <p class="card-text">{{ attraction.attractionDescription }}</p>
+            <p class="card-text"> {{ attraction.attractionDescription }}</p>
           </div>
         </div>
       </div>
     </div>
+
 
     <section class="gallery-block compact-gallery">
       <div class="container">
@@ -77,25 +76,21 @@ onMounted(() => {
           <h2>{{ tripName }}</h2>
         </div>
         <div class="row no-gutters">
-          <div v-for="image in selectedAttractionImages" :key="image.imageId">
-            <div class="col-md-6 col-lg-4 item zoom-on-hover">
-                <a class="lightbox" :href="alterImg || imageSrc(image.image)">
-                  <img
-                      class="img-fluid image"
-                      :src="alterImg || imageSrc(image.image)"
-                      :alt="image.imageDescription"
-                  >
-                  <span class="description">
-                    <span class="description-heading">{{ image.imageDescription }}</span>
-                    <span class="description-body">{{ formatDate(image.date) }}</span>
-                  </span>
-              </a>
-            </div>
+          <div v-for="image in selectedAttractionImages" :key="image.imageId" class="col-md-6 col-lg-4 item zoom-on-hover">
+            <a class="lightbox" :href="'data:image/jpeg;base64,' + image.image">
+              <div class="image-container">
+                <img class="img-fluid image" :src="'data:image/jpeg;base64,' + image.image">
+                <span class="description">
+                  <span class="description-heading">사진 설명 : {{ image.imageDescription }}</span>
+                  <br>
+                  <span class="description-body">{{ formatDate(image.date) }}</span>
+                </span>
+              </div>
+            </a>
           </div>
         </div>
       </div>
     </section>
-
   </div>
 </template>
 
@@ -109,83 +104,47 @@ onMounted(() => {
   background-color: #f8f9fa;
 }
 
-.gallery-block{
-  padding-bottom: 60px;
-  padding-top: 60px;
+.zoom-on-hover:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s;
 }
 
-.gallery-block .heading{
-  margin-bottom: 50px;
-  text-align: center;
-}
-
-.gallery-block .heading h2{
-  font-weight: bold;
-  font-size: 1.4rem;
-  text-transform: uppercase;
-}
-
-.gallery-block.compact-gallery .item{
-  overflow: hidden;
-  margin-bottom: 0;
-  background: black;
-  opacity: 1;
-}
-
-.gallery-block.compact-gallery .item .image{
-  transition: 0.8s ease;
-}
-
-.gallery-block.compact-gallery .item .info{
+.image-container {
   position: relative;
-  display: inline-block;
 }
 
-.gallery-block.compact-gallery .item .description{
-  display: grid;
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.description {
   position: absolute;
   bottom: 0;
   left: 0;
-  color: #fff;
-  padding: 10px;
-  font-size: 17px;
-  line-height: 18px;
   width: 100%;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  opacity: 1;
+  padding: 10px 15px;
+  background: rgba(0, 0, 0, 0.6);
   color: #fff;
-  transition: 0.8s ease;
-  text-align: center;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-  background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.39));
+  text-align: left;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
-.gallery-block.compact-gallery .item .description .description-heading{
-  font-size: 1em;
+.zoom-on-hover:hover .description {
+  opacity: 1;
+}
+
+.description-heading {
+  font-size: 1.1rem;
   font-weight: bold;
+  margin-bottom: 5px;
 }
 
-.gallery-block.compact-gallery .item .description .description-body{
-  font-size: 0.8em;
-  margin-top: 10px;
-  font-weight: 300;
-}
-
-@media (min-width: 576px) {
-
-  .gallery-block.compact-gallery .item .description {
-    opacity: 0;
-  }
-
-  .gallery-block.compact-gallery .item a:hover .description {
-    opacity: 1;
-  }
-
-  .gallery-block .zoom-on-hover:hover .image {
-    transform: scale(1.3);
-    opacity: 0.7;
-  }
+.description-body {
+  font-size: 0.9rem;
+  margin: 0;
 }
 
 </style>

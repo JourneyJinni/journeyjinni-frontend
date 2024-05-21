@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <img :src="post.image || 'resources\\images.jpg'" class="card-img-top" alt="대체이미지 설명">
+    <img :src="'data:image/jpeg;base64,' + post.image || 'resources\\images.jpg'" class="card-img-top" alt="대체이미지 설명">
 
     <div class="card-body">
       <h5 class="card-title">{{ post.tripName }}</h5>
