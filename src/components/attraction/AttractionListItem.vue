@@ -8,12 +8,9 @@
             <div class="col-md-8">
               <h4 class="mb-4">Search Result</h4>
             </div>
-            <!-- 오른쪽: 버튼 -->
-            <div class="col-md-4">
-              <button type="button" class="btn btn-primary btn-sm float-right" id="rootSearch">경로 검색</button>
-            </div>
           </div>
-          <ul>
+          <!-- 여기에 스크롤을 추가 -->
+          <ul style="max-height: 500px; overflow-y: auto;">
             <li class="row" v-for="(result, index) in  attractionStore.searchedList" :key="index">
               <div class="col-7">
                 <h4>{{ result.title }}</h4>
@@ -27,6 +24,8 @@
           </ul>
         </div>
       </div>
+
+
       <div class="col-md-6">
         <KakaoMap :lat="coordinate.lat" :lng="coordinate.lng" :draggable="true">
           <KakaoMapMarker :lat="coordinate.lat" :lng="coordinate.lng"></KakaoMapMarker>
