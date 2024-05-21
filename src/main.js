@@ -12,7 +12,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import ImageUploader from 'vue-image-upload-resize'
 import { useKakao } from 'vue3-kakao-maps/@utils';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // 이 줄을 추가하여 부트스트랩 JS를 포함합니다.
-
+import '@/assets/styles.css';  // 공통 CSS 파일 임포트
 
 
 
