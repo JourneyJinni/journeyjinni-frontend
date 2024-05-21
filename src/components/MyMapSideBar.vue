@@ -96,6 +96,19 @@ const openAttractionAddModal = (tripId) => {
         modalInstance.value.show();
       }
 }
+
+const deleteAttraction = (attraction_id) => {
+  axios.delete("http://localhost/delete-userattraction/" + attraction_id)
+    .then(({ data }) => {
+      alert("삭제했습니다.")
+      getUserTrip();
+  })
+}
+
+const emit = defineEmits(['moveToMarker'])
+const moveToMarker = (attractionId) => {
+  this.emit('moveToMarker',attractionId)
+}
 </script>
 
 
@@ -131,12 +144,18 @@ const openAttractionAddModal = (tripId) => {
         <div v-if="tripListFlags[index]" class="margin-5px">
           <button
             class="list-group-item list-group-item-action"
+            @click.stop="moveToMarker(attraction.attraction_id)"
             v-for="attraction in myAttractionMap.get(trip.trip_id)"
             :key="attraction.attraction_id"
+
           >
             <div class="d-flex w-100 justify-content-between">
               <p class="mb-1">{{ attraction.attraction_name }}</p>
+              <button class="delete-button" @click.stop="deleteAttraction(attraction.attraction_id)">
+                <img src="@/assets/delete.png" alt="Delete Attraction">
+              </button>
             </div>
+            
           </button>
         </div>
       </button>
@@ -266,5 +285,11 @@ const openAttractionAddModal = (tripId) => {
     .image-button img {
       width: 50px; /* 이미지 크기를 조절하세요 */
       height: 50px; /* 이미지 크기를 조절하세요 */
+    }
+    /* 이미지 버튼을 오른쪽으로 이동시킵니다. */
+    .delete-button {
+      margin-left: auto; /* 자동 마진을 사용하여 오른쪽으로 이동시킵니다. */
+      width: 10px; /* 이미지 크기를 조절하세요 */
+      height: 10px; /* 이미지 크기를 조절하세요 */
     }
 </style>

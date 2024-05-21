@@ -2,78 +2,54 @@
   <div>
 
     <MyMapSideBar/>
+  <div class="container">
+    <KakaoMap :lat="coordinate.lat" :lng="coordinate.lng" :draggable="true">
+        <span v-for="image in images" :key='image.image_id'>
+          <KakaoMapMarker :lat="image.latitude" :lng="image.longitude"></KakaoMapMarker> 
+        </span>
+    </KakaoMap>
+
+  </div>
+  <!-- <div v-for="image in images" :key='image.image_id'>
+    <img :src="'data:image/jpeg;base64,' +image.image" alt="Image" style='height: 100px; width: 100px;'>
+  </div> -->
+
   </div>
 
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import {KakaoMap, KakaoMapMarker} from "vue3-kakao-maps";
+import { ref,onMounted } from 'vue';
 import axios from 'axios';
-import imageCompression from 'browser-image-compression';
-import exifr from 'exifr';
 import MyMapSideBar from '@/components/MyMapSideBar.vue';
-
+import { useMemberStore } from "@/stores/member"
 
 const images = ref([]);
-const metadataList = ref([]);
-const options = {
-    maxSizeMB: 1, // 허용하는 최대 사이즈 지정
-    maxWidthOrHeight: 1920, // 허용하는 최대 width, height 값 지정
-    useWebWorker: true // webworker 사용 여부
-};
+const memberStore = useMemberStore()
+const userId = memberStore.userInfo.user_id;
+const coordinate = ref({
+  lat: 33.250701,
+  lng: 126.570667
+});
 
-// 메타데이터를 추출하는 함수
-const getMetadata = async (file) => {
+const fetchImage = async () => {
   try {
-    const metadata = await exifr.parse(file);
-    return {
-      date: metadata.DateTimeOriginal,
-      latitude: metadata.latitude,
-      longitude: metadata.longitude
-    };
-  } catch (error) {
-    console.error('Failed to extract metadata', error);
-    return {};
-  }
-};
-
-
-// 이미지 파일 압축
-const handleImageUpload = async (event) => {
-  const files = event.target.files;
-  for (const file of files) {
-    // 메타데이터 추출
-    const metadata = await getMetadata(file);
-    metadataList.value.push(metadata);
-
-
-
-    // 이미지 압축
-    const compressedFile = await imageCompression(file, options);
+    axios.get("http://localhost/get-mymap-imgs/" + userId)
+      .then(({ data }) => {
+        images.value = data;
+        
+      console.log(data);
+    })
     
-    images.value.push(compressedFile);
-
-  }
-};
-
-const uploadImages = async () => {
-  const formData = new FormData();
-  images.value.forEach((image, index) => {
-    // 이미지 파일과 메타데이터 추가
-    formData.append('images', image, `image${index + 1}.jpg`);
-    formData.append('metadata', JSON.stringify(metadataList.value[index]));
-  });
-
-  try {
-    const response = await axios.post('http://localhost/map-img-upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    });
-    console.log(response.data);
+    
+    
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching the image:", error);
   }
 };
 
+onMounted(() => {
+  fetchImage();
+})
 </script>
