@@ -125,7 +125,6 @@ onMounted(() => {
         <div class="modal-body">
           <form id="travelForm">
             <div class="mb-3">
-              {{ props.tripId }}
               <label for="destinationName" class="form-label">여행지 이름</label>
               <input type="text" class="form-control" id="destinationName" placeholder="여행지 이름을 입력하세요" v-model="attractionName">
             </div>
