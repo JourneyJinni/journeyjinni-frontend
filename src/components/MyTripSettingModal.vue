@@ -10,9 +10,15 @@ const props = defineProps({
 });
 const tripName = ref();
 const tripId = ref();
+const tripShared = ref();
 watch(props, (newValue) => {
-  tripId.value = newValue.trip.trip_id
-  tripName.value= newValue.trip.trip_name
+  tripId.value = props.trip.trip_id
+  tripName.value = props.trip.trip_name
+  if (props.trip.is_shared == 0) {
+    tripShared.value = false;
+  } else {
+    tripShared.value = true;
+  }
 })
 
 const emit = defineEmits(['refreshAttractions']);
@@ -23,7 +29,12 @@ const refreshAttractions = () => {
 const updateTrip = () => {
   const formData = new FormData();
   formData.append("tripName", tripName.value);
-
+  if (!tripShared.value) {
+    formData.append("isShared", 0); 
+  } else {
+    formData.append("isShared", 1); 
+  }
+  
   axios.put('http://localhost/update-tripbyid/' + props.trip.trip_id, formData) 
     .then(({ data }) => {
       console.log(data);
@@ -43,6 +54,14 @@ const deleteTrip = () => {
 const rollback = () => {
   tripName.value= props.trip.trip_name
 }
+const toggleSharing = () => {
+  if (!tripShared.value) {
+    tripShared.value = true;
+  } else {
+    tripShared.value = false;
+  }
+
+}
 </script>
 
 <template>
@@ -51,11 +70,17 @@ const rollback = () => {
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="exampleModalLabel">여행 상세 및 설정</h1>
+          
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <label>여행 이름: </label>
           <input type="text" v-model="tripName">
+          
+          <div style="margin-top: 20px;">
+            <button type="button" class="btn btn-primary"  v-if="!tripShared" @click="toggleSharing">공유 시작</button>
+            <button type="button" class="btn btn-danger"  v-if="tripShared" @click="toggleSharing">공유 중</button>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="updateTrip">수정</button>

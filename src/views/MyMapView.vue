@@ -1,5 +1,5 @@
 <script setup>
-import { KakaoMap, KakaoMapMarker, KakaoMapInfoWindow } from "vue3-kakao-maps";
+import { KakaoMap, KakaoMapMarker } from "vue3-kakao-maps";
 import MyMapImageSettingModal from '@/components/MyMapImageSettingModal.vue';
 import { ref,onMounted } from 'vue';
 import axios from 'axios';
@@ -15,6 +15,7 @@ const lat = ref(33.450701);
 const lng = ref(126.570667);
 const map = ref();
 const currentImage = ref({});
+const markerList = ref({});
 
 const onLoadKakaoMap = (mapRef) => {
   map.value = mapRef;
@@ -33,12 +34,15 @@ const fetchImage = async () => {
     axios.get("http://localhost/get-mymap-imgs/" + userId)
       .then(({ data }) => {
         images.value = data;
-        
-      console.log(data);
+        images.value.forEach((image) => {
+          markerList.value.push({
+            lat: image.latitude,
+            lng: image.longitude
+          })
+        })
+        console.log(data);
+        console.log(markerList.value);
     })
-    
-    
-    
   } catch (error) {
     console.error("Error fetching the image:", error);
   }
@@ -73,6 +77,12 @@ const onClickKakaoMapMarker = (image) => {
 const refreshImages = () => {
   fetchImage();
 }
+// kakao.maps.load(() => {
+//   var map = new kakao.maps.Map(document.getElementById('map'), { // 지도를 표시할 div
+//         center : new kakao.maps.LatLng(36.2683, 127.6358), // 지도의 중심좌표 
+//         level : 14 // 지도의 확대 레벨 
+//     });
+// })
 
 </script>
 
@@ -81,12 +91,18 @@ const refreshImages = () => {
   <div>
 
   <MyMapSideBar @move-to-marker="onMoveToMarker" @refresh-attractions="fetchImage"/>
+
+  <!-- <div id="map" style="width:100%;height:350px;"></div> -->
+
+  
+
   <div class="container">
     <KakaoMap
     :lat="lat" :lng="lng" @onLoadKakaoMap="onLoadKakaoMap"
     :level='13'
     :width='1200'
     :height='600'
+   
     >
         <span v-for="image in images" :key='image.image_id'>
           <KakaoMapMarker :lat="image.latitude" :lng="image.longitude" @onLoadKakaoMapMarker="onLoadKakaoMapMarker" :clickable='true'
@@ -100,12 +116,10 @@ const refreshImages = () => {
           </KakaoMapMarker> 
         </span>
     </KakaoMap>
-
   </div>
-  <!-- <div v-for="image in images" :key='image.image_id'>
-    <img :src="'data:image/jpeg;base64,' +image.image" alt="Image" style='height: 100px; width: 100px;'>
-  </div> -->
-  <MyMapImageSettingModal :image="currentImage" :refresh-images="refreshImages"/>
+  
+
+  <MyMapImageSettingModal :image="currentImage" @refresh-images="refreshImages"/>
   </div>
 
 </template>

@@ -17,14 +17,17 @@
                 <p>{{ result.addr1 }}</p>
                 <p></p>
               </div>
-              <div class="col-5">
+              <div class="col-2">
                 <button class="btn btn-primary" @click="setMap(result.latitude, result.longitude)">위치</button>
+              </div>
+              <div class="col-3">
+                <button class="btn btn-primary" @click="openDetailModal(result)">더보기</button>
               </div>
             </li>
           </ul>
         </div>
       </div>
-
+      <attractionDetailModal :attraction="currentAttraction"/>
 
       <div class="col-md-6">
         <KakaoMap :lat="coordinate.lat" :lng="coordinate.lng" :draggable="true">
@@ -39,11 +42,26 @@
 import {ref, watch} from 'vue';
 import {KakaoMap, KakaoMapMarker} from "vue3-kakao-maps";
 import { useAttractionStore } from "@/stores/Attraction.js";
+import attractionDetailModal from "@/components/attraction/AttractionDetailModal.vue";
+import { Modal } from 'bootstrap';
 const attractionStore = useAttractionStore();
 const coordinate = ref({
   lat: 33.450701,
   lng: 126.570667
 });
+const currentAttraction = ref();
+
+const openDetailModal = (attraction) => {
+  currentAttraction.value = attraction;
+  if (currentAttraction.value !== null) {
+    const modalElement = document.querySelector(`#attractionDetailModal`);
+    const modalInstance = ref();
+    if (!modalInstance.value) {
+      modalInstance.value = new Modal(modalElement);
+    }
+    modalInstance.value.show();
+  }
+};
 
 const setMap = (latitude, longitude) => {
   console.log(latitude, longitude);

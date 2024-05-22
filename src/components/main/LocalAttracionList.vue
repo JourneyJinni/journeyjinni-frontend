@@ -17,7 +17,7 @@
       <div class="row fw-bold text-center">
       </div>
       <div class="row mt-3">
-        <div class="card col-lg-3 col-md-6" v-for="(attraction,index) in mainAttractionList" :key="attraction.id">
+        <div class="card col-lg-3 col-md-6" v-for="attraction in mainAttractionList" :key="attraction.id">
           <div class="card-img-wrapper mt-2">
             <img :src="attraction.firstImage" class="card-img-top img-fluid" alt=""
                  onerror="this.onerror=null; this.src='src/assets/noimg.jpg'">
@@ -27,39 +27,41 @@
             <p class="card-text">{{ attraction.addr1 + attraction.addr2 }}</p>
 
             <!-- 고유한 모달 ID를 data-target에 설정 -->
-            <button type="button" class="btn btn-primary btn-sm" @click="showModal[index] = true">
+            <button type="button" class="btn btn-primary btn-sm" @click="openDetailModal(attraction)">
               더보기
             </button>
-            <!-- <AttractionModal :attraction="attraction" :show-modal="showModal[index]" @close-modal="closeModal(index)" /> -->
+            
           </div>
         </div>
       </div>
     </div>
   </div>
   <div>
-    <!-- <button type="button" class="btn btn-primary btn-sm" @click='showModalMthod'> 모달열기</button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
-    
-    <AttractionModal :show-modal='showModal'/> -->
-
   </div>
+  <attractionDetailModal :attraction="currentAttraction"/>
 </template>
 
 <script setup>
-import AttractionModal from '@/components/AttractionModal.vue';
+import attractionDetailModal from "@/components/attraction/AttractionDetailModal.vue";
 import axios from "axios";
-import {ref} from "vue";
-
-const showModal = ref(false);
-const showModalMthod = () => {
-  showModal.value = true;
-  console.log("click", showModal.value);
-}
-
-const closeModal = () => {
-  showModal.value = false;
-};
+import { ref } from "vue";
+import { Modal } from 'bootstrap';
 const mainAttractionList = ref([]);
+const currentAttraction = ref();
+
+const openDetailModal = (attraction) => {
+  currentAttraction.value = attraction;
+  if (currentAttraction.value !== null) {
+    const modalElement = document.querySelector(`#attractionDetailModal`);
+    const modalInstance = ref();
+    if (!modalInstance.value) {
+      modalInstance.value = new Modal(modalElement);
+    }
+    modalInstance.value.show();
+  }
+};
+
+
 
 axios.get("http://localhost/")
     .then(({data}) => {
