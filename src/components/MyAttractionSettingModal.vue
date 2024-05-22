@@ -13,9 +13,13 @@ const props = defineProps({
         default: null
     }
 });
-
+const images = ref([]);
 const attractionName = ref("");
 const attractionDes = ref("");
+const fileInput = ref(null);
+const isLoading = ref(false); // 로딩 상태
+const thisTripId = ref();
+const metadataList = ref([]);
 
 watch(props, (newValue) => {
     attractionName.value = props.attraction.attraction_name;
@@ -28,16 +32,15 @@ const refreshAttractions = () => {
     emit('refreshAttractions');
 }
 
-const thisTripId = ref();
-const images = ref([]);
-const metadataList = ref([]);
+
 
 
 const options = {
-    maxSizeMB: 1, // 허용하는 최대 사이즈 지정
-    maxWidthOrHeight: 1920, // 허용하는 최대 width, height 값 지정
-    useWebWorker: true // webworker 사용 여부
+  maxSizeMB: 0.8, // 허용하는 최대 사이즈 지정
+  maxWidthOrHeight: 1920, // 허용하는 최대 width, height 값 지정
+  useWebWorker: true // webworker 사용 여부
 };
+
 
 // 메타데이터를 추출하는 함수
 const getMetadata = async (file) => {
@@ -55,27 +58,32 @@ const getMetadata = async (file) => {
 };
 
 
-// 이미지 파일 압축
+// 이미지 파일 압축 및 처리
 const handleImageUpload = async (event) => {
-    const files = event.target.files;
-    for (const file of files) {
-    // 메타데이터 추출
+  isLoading.value = true;
+  images.value = [];
+  const files = Array.from(event.target.files);
+
+  // 모든 파일의 압축과 메타데이터 추출을 병렬로 처리
+  const compressPromises = files.map(async (file) => {
     const metadata = await getMetadata(file);
-    metadataList.value.push(metadata);
-
-
-
-    // 이미지 압축
     const compressedFile = await imageCompression(file, options);
-    
-    images.value.push(compressedFile);
+    return { compressedFile, metadata };
+  });
 
-    }
+  // 모든 압축 및 메타데이터 추출이 완료될 때까지 대기
+  const results = await Promise.all(compressPromises);
+  
+  results.forEach(({ compressedFile, metadata }) => {
+    images.value.push(compressedFile);
+    metadataList.value.push(metadata);
+  });
+  isLoading.value = false;
 };
 
-
 const submitForm = async () => {
-const formData = new FormData();
+    isLoading.value = true;
+    const formData = new FormData();
     // images.value.forEach((image, index) => {
     //     // 이미지 파일과 메타데이터 추가
 
@@ -95,8 +103,10 @@ const formData = new FormData();
     console.log(response.data);
     } catch (error) {
         console.log(error);
+    } finally {
+        isLoading.value = false;
+        refreshAttractions();
     }
-    refreshAttractions();
 
 }
 
@@ -117,40 +127,47 @@ const rollback = () => {
 </script>
 
 <template>
-<!-- 여행지 추가 모달 -->
+
+
 <div class="modal fade" tabindex="-1" id="myAttractionSettingModal" aria-labelledby="travelModalLabel" aria-hidden="true">
-<div class="modal-dialog">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
-    <div class="modal-header">
-        <h5 class="modal-title" id="travelModalLabel">여행지 상세 및 수정</h5>
+      <div class="modal-header">
+        <h5 class="modal-title" id="travelModalLabel">여행지 등록</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    </div>
-    <div class="modal-body">
+      </div>
+      <div class="modal-body">
         <form id="travelForm">
-        <div class="mb-3">
+          <div class="mb-3">
             <label for="destinationName" class="form-label">여행지 이름</label>
             <input type="text" class="form-control" id="destinationName" placeholder="여행지 이름을 입력하세요" v-model="attractionName">
-        </div>
-        <div class="mb-3">
+          </div>
+          <div class="mb-3">
             <label for="destinationDescription" class="form-label">여행지 설명</label>
             <textarea class="form-control" id="destinationDescription" rows="3" placeholder="여행지 설명을 입력하세요" v-model="attractionDes"></textarea>
-        </div>
-        <!--  이미지 업로드           -->
-        <div class="mb-3">
+          </div>
+          <!-- 이미지 업로드 -->
+          <div class="mb-3">
             <label for="destinationImages" class="form-label">이미지 업로드</label>
-            <input class="form-control" type="file" id="destinationImages" accept="image/*" @change="handleImageUpload" multiple>
-        </div>
+            <input ref="fileInput" class="form-control" type="file" id="destinationImages" accept="image/*" @change="handleImageUpload" multiple>
+          </div>
         </form>
-    </div>
-    <div class="modal-footer">
+        <!-- 로딩 스피너 -->
+        <div v-if="isLoading" class="d-flex justify-content-center mt-3">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
         <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="submitForm">저장</button>
         <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteAttraction">삭제</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="rollback">취소</button>
-        
     </div>
     </div>
+  </div>
 </div>
-</div>
+
 
 
 </template>
