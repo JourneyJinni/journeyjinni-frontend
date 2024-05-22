@@ -156,14 +156,15 @@ function moveList() {
       <textarea class="form-control" v-model="article.content" rows="10"></textarea>
     </div>
     <div class="col-auto text-center">
-      <button type="submit" class="btn btn-outline-primary mb-3" v-if="type === 'regist'">
+      <button type="submit" class="btn btn-primary mb-3" v-if="type === 'regist'">
         글작성
       </button>
-      <button type="submit" class="btn btn-outline-success mb-3" v-else>글수정</button>
-      <button type="button" class="btn btn-outline-danger mb-3 ms-1" @click="moveList">
-        목록으로이동...
+      <button type="submit" class="btn btn-success mb-3" v-else>글수정</button>
+      <button type="button" class="btn btn-danger mb-3 ms-1" @click="moveList">
+        목록으로 이동...
       </button>
     </div>
+
   </form>
 </template>
 
