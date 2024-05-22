@@ -1,16 +1,17 @@
 <script setup>
-import { ref } from "vue";
+import {reactive, ref, watch} from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { useMemberStore } from "@/stores/member";
 import { useMenuStore } from "@/stores/menu";
+import {checkId} from "@/api/user.js";
 
 const router = useRouter();
 const memberStore = useMemberStore();
 const { isLogin, isLoginError } = storeToRefs(memberStore);
 const { userLogin, getUserInfo } = memberStore;
 const { changeMenuState } = useMenuStore();
-
+const { userSignUp } = memberStore;
 const loginUser = ref({
   user_id: "",
   user_password: "",
@@ -26,12 +27,71 @@ const login = async () => {
   if (isLogin.value) {
     getUserInfo(token);
     changeMenuState();
-    router.replace("/");
+    router.push('/').then(() => {
+      location.reload();
+    });
+
   }
 };
 
 const togglePanel = () => {
   isRightPanelActive.value = !isRightPanelActive.value;
+};
+// form 상태 변수 설정
+const form = reactive({
+  user_name: '',
+  user_id: '',
+  user_password: '',
+  pwdcheck: '',
+  email_id: '',
+  email_domain: '선택',
+  passwordsMatch: true
+});
+
+// 추가 상태 변수
+const useridCheckStatus = ref('');
+const isUserIdChecked = ref(false);
+
+watch(() => [form.user_password, form.pwdcheck], () => {
+  form.passwordsMatch = form.user_password === form.pwdcheck;
+});
+
+// 아이디 중복 체크 axios
+const checkUserid = async () => {
+  console.log("userId : ", form.user_id);
+  if (!/^[a-zA-Z0-9]+$/.test(form.user_id)) {
+    console.error('아이디는 영어 대문자, 소문자, 숫자만 가능합니다.');
+    useridCheckStatus.value = 'invalid';
+    return;
+  }
+
+  try {
+    await checkId(form.user_id,
+        (response) => {
+          if (response.data.success) {
+            console.log("true");
+            useridCheckStatus.value = 'available';
+            isUserIdChecked.value = true; // 아이디 중복 확인 완료 상태 설정
+          } else {
+            useridCheckStatus.value = 'unavailable';
+          }
+        }
+    );
+  } catch (error) {
+    console.error('아이디 중복 확인 중 오류가 발생했습니다:', error);
+  }
+};
+
+const resetForm = () => {
+  form.user_name = '';
+  form.user_id = '';
+  form.user_password = '';
+  form.pwdcheck = '';
+  form.email_id = '';
+  form.email_domain = '선택';
+  form.passwordsMatch = true;
+  useridCheckStatus.value = '';
+  isUserIdChecked.value = false; // 초기화 시 아이디 중복 확인 상태도 초기화
 };
 </script>
 
@@ -42,69 +102,111 @@ const togglePanel = () => {
         <!-- Sign In -->
         <div class="container__form container--signin">
           <form class="form" id="form2" @submit.prevent="login">
-            <h2 class="form__title">Sign In</h2>
+            <h2 class="form__title">로그인</h2>
             <div class="form-check mb-3 float-end">
-              <input class="form-check-input" type="checkbox" />
-              <label class="form-check-label" for="saveid"> Remember Me </label>
             </div>
             <div class="mb-3 text-start">
-              <label for="userid" class="form-label">Username: </label>
+              <label for="userid" class="form-label">아이디: </label>
               <input
                   type="text"
                   class="form-control"
                   v-model="loginUser.user_id"
-                  placeholder="Username..."
+                  placeholder="아이디..."
               />
             </div>
             <div class="mb-3 text-start">
-              <label for="userpwd" class="form-label">Password: </label>
+              <label for="userpwd" class="form-label">비밀번호: </label>
               <input
                   type="password"
                   class="form-control"
                   v-model="loginUser.user_password"
                   @keyup.enter="login"
-                  placeholder="Password..."
+                  placeholder="비밀번호..."
               />
             </div>
             <div class="mb-3 text-start" v-if="isLoginError === true">
               <div class="alert alert-danger" role="alert">
-                Please check your username or password
+                아이디와 비밀번호를 다시 확인하세요.
               </div>
             </div>
             <div class="col-auto text-center">
-              <button type="submit" class="btn btn-outline-primary mb-3">
-                Sign In
+              <button type="submit" class="btn" @click="login">
+                로그인
               </button>
-              <button type="button" class="btn btn-outline-success ms-1 mb-3" @click="togglePanel">Sign Up</button>
+              <button type="button" class="btn" @click="togglePanel">Sign Up</button>
             </div>
           </form>
-        </div>
 
+        </div>
         <!-- Sign Up -->
         <div class="container__form container--signup">
-          <form action="#" class="form" id="form1" @submit.prevent="togglePanel">
-            <h2 class="form__title">Sign Up</h2>
-            <input type="text" placeholder="User" class="input" />
-            <input type="email" placeholder="Email" class="input" />
-            <input type="password" placeholder="Password" class="input" />
-            <button class="btn">Sign Up</button>
-          </form>
+            <div class="row justify-content-center">
+              <div class="col-lg-10">
+              </div>
+              <div class="col-lg-10 text-start">
+                <form @submit.prevent="userSignUp(form)">
+                  <h2 class="form__title">회원 가입</h2>
+                  <div class="mb-3">
+                    <label for="user_name" class="form-label">이름 : </label>
+                    <input v-model="form.user_name" type="text" class="form-control" placeholder="이름..." />
+                  </div>
+                  <div class="mb-3">
+                    <label for="user_id" class="form-label">아이디 : </label>
+                    <!-- 아이디 입력 필드 비활성화는 :disabled 속성을 통해 제어 -->
+                    <input v-model="form.user_id" :disabled="isUserIdChecked" type="text" class="form-control" placeholder="아이디..." />
+                    <button type="button" class="btn btn-outline-secondary mt-2" @click="checkUserid" :disabled="isUserIdChecked">아이디 중복 확인</button>
+                    <div v-if="useridCheckStatus === 'available'" class="text-success">사용 가능한 아이디입니다.</div>
+                    <div v-if="useridCheckStatus === 'unavailable'" class="text-danger">사용 불가능한 아이디입니다.</div>
+                    <div v-if="useridCheckStatus === 'invalid'" class="text-danger">아이디는 영어 대문자, 소문자, 숫자만 가능합니다.</div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="user_password" class="form-label">비밀번호 : </label>
+                    <input v-model="form.user_password" type="password" class="form-control" placeholder="비밀번호..." />
+                  </div>
+                  <div class="mb-3">
+                    <label for="pwdcheck" class="form-label">비밀번호 확인 : </label>
+                    <input v-model="form.pwdcheck" type="password" class="form-control" id="pwdcheck" placeholder="비밀번호 확인..." />
+                    <div v-if="!form.passwordsMatch" class="text-danger">비밀번호가 일치하지 않습니다.</div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="email_id" class="form-label">이메일 : </label>
+                    <div class="input-group">
+                      <input v-model="form.email_id" type="text" class="form-control" placeholder="이메일 아이디" />
+                      <span class="input-group-text">@</span>
+                      <select v-model="form.email_domain" class="form-select" aria-label="이메일 도메인 선택">
+                        <option selected>선택</option>
+                        <option value="ssafy.com">싸피</option>
+                        <option value="google.com">구글</option>
+                        <option value="naver.com">네이버</option>
+                        <option value="kakao.com">카카오</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="col-auto text-center">
+                    <!-- 회원가입 버튼 비활성화는 :disabled 속성을 통해 제어 -->
+                    <button type="submit" class="btn1" @click = "userSignUp(form)" :disabled="!isUserIdChecked || useridCheckStatus !== 'available'">회원가입</button>
+                    <button type="button" class="btn1" @click="resetForm">초기화</button>
+                  </div>
+                </form>
+              </div>
+            </div>
         </div>
+
 
         <!-- Overlay -->
         <div class="container__overlay">
           <div class="overlay">
             <div class="overlay__panel overlay--left">
-              <button class="btn" @click="togglePanel">Sign In</button>
+              <h2>여행지니에서 로그인 하시고 다양한 기록을 남기세요</h2>
+              <button class="btn1 btn-outline-secondary mt-2" @click="togglePanel">Sign In</button>
             </div>
             <div class="overlay__panel overlay--right">
-              <button class="btn" @click="togglePanel">Sign Up</button>
+              <button class="btn1" @click="togglePanel">Sign Up</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <router-view></router-view>
   </div>
 </template>
 
@@ -120,8 +222,8 @@ const togglePanel = () => {
   --button-radius: 0.7rem;
 
   /* SIZES */
-  --max-width: 758px;
-  --max-height: 420px;
+  --max-width: 900px;
+  --max-height: 600px;
 
   font-size: 16px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
@@ -143,6 +245,7 @@ body {
 
 .page-container {
   display: flex;
+  justify-content: center;
   flex-direction: column;
   min-height: 100vh;
 }
@@ -160,12 +263,6 @@ body {
   margin-bottom: 1.25rem;
 }
 
-.link {
-  color: var(--gray);
-  font-size: 0.9rem;
-  margin: 1.5rem 0;
-  text-decoration: none;
-}
 
 .container {
   background-color: var(--white);
@@ -176,35 +273,44 @@ body {
   overflow: hidden;
   position: relative;
   width: 100%;
+  height: 100vh;
 }
 
 .container__form {
   height: 100%;
   position: relative;
   transition: all 0.6s ease-in-out;
+  width: 50%;
+  padding: 2rem;
 }
+
 
 .container--signin {
-  width: 100%;
+  left: 0;
+  width: 50%;
   z-index: 2;
 }
-
 .container--signup {
+  position: absolute;
+  left: 100%;
+  top:0;
   opacity: 0;
-  width: 100%;
+  width: 50%;
   z-index: 1;
 }
 
+
 .container.right-panel-active .container--signin {
-  transform: translateX(100%);
+  transform: translateX(0%);
 }
 
 .container.right-panel-active .container--signup {
   animation: show 0.6s;
   opacity: 1;
-  transform: translateX(100%);
+  transform: translateX(-100%);
   z-index: 5;
 }
+
 
 .container__overlay {
   height: 100%;
@@ -230,7 +336,7 @@ body {
   background-size: cover;
   height: 100%;
   left: -100%;
-  position: relative;
+  position: absolute;
   transform: translateX(0);
   transition: transform 0.6s ease-in-out;
   width: 200%;
@@ -271,7 +377,7 @@ body {
   transform: translateX(20%);
 }
 
-.btn {
+.btn1 {
   background-color: var(--blue);
   background-image: linear-gradient(90deg, var(--blue) 0%, var(--lightblue) 74%);
   border-radius: 20px;
@@ -286,15 +392,16 @@ body {
   transition: transform 80ms ease-in;
 }
 
-.form > .btn {
+
+.form > .btn1 {
   margin-top: 1.5rem;
 }
 
-.btn:active {
+.btn1:active {
   transform: scale(0.95);
 }
 
-.btn:focus {
+.btn1:focus {
   outline: none;
 }
 

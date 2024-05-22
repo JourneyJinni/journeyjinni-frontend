@@ -50,10 +50,7 @@
           <div v-else>
             <ul class="navbar-nav" id="logout-nav">
               <li class="nav-item">
-                <router-link :to="{ name: 'login' }" class="nav-link">로그인</router-link>
-              </li>
-              <li class="nav-item">
-                <router-link :to="{ name: 'signup' }" class="nav-link">회원가입</router-link>
+                <router-link :to="{ name: 'login' }" class="nav-link">로그인/로그아웃</router-link>
               </li>
             </ul>
           </div>
@@ -64,13 +61,17 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import {computed, watch} from 'vue';
 import { useMemberStore } from "@/stores/member"
 
 const memberStore = useMemberStore();
 const { userLogout, deleteUser } = memberStore;
 
 const token = computed(() => sessionStorage.getItem("accessToken") !== null && memberStore.isValidToken);
+
+watch(() => token, () => {
+  console.log("token watch!");
+});
 
 const name = computed(() => memberStore.username);
 const user_id = computed(() => memberStore.userId);

@@ -46,8 +46,8 @@
           </div>
           <div class="col-auto text-center">
             <!-- 회원가입 버튼 비활성화는 :disabled 속성을 통해 제어 -->
-            <button type="button" class="btn btn-outline-primary mb-3" @click="userSignUp(form)" :disabled="!isUserIdChecked || useridCheckStatus !== 'available'">회원가입</button>
-            <button type="button" class="btn btn-outline-success ms-1 mb-3" @click="resetForm">초기화</button>
+            <button type="button" class="btn" @click="userSignUp(form)" :disabled="!isUserIdChecked || useridCheckStatus !== 'available'">회원가입</button>
+            <button type="button" class="btn" @click="resetForm">초기화</button>
           </div>
         </form>
       </div>

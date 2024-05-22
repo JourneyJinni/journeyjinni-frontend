@@ -27,6 +27,7 @@ export const useMemberStore = defineStore("memberStore", () => {
           isLogin.value = true
           isLoginError.value = false
           isValidToken.value = true
+          console.log("user : ", response.data)
           userInfo.value = response.data.userInfo
           sessionStorage.setItem("accessToken", accessToken)
           sessionStorage.setItem("refreshToken", refreshToken)
@@ -53,8 +54,7 @@ export const useMemberStore = defineStore("memberStore", () => {
           userInfo.value = response.data.userInfo
           username.value = userInfo.value.user_name
           userId.value = userInfo.value.user_id
-          console.log("username", username)
-          console.log("username.value", username.value)
+          console.log("username.value : ", response)
           isValidToken.value = true
         } else {
           isValidToken.value = false
@@ -181,7 +181,7 @@ export const useMemberStore = defineStore("memberStore", () => {
         (response) => {
           if (response.data.success) {
             alert("회원가입이 완료되었습니다.")
-            router.push({ name: "login" })
+            router.push({ name: "home" })
           } else {
             console.log("회원가입 실패")
           }
