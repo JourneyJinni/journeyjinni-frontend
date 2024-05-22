@@ -1,82 +1,320 @@
 <script setup>
-import { ref } from "vue"
-import { storeToRefs } from "pinia"
-import { useRouter } from "vue-router"
-import { useMemberStore } from "@/stores/member"
-import { useMenuStore } from "@/stores/menu"
+import { ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+import { useMemberStore } from "@/stores/member";
+import { useMenuStore } from "@/stores/menu";
 
-const router = useRouter()
-
-const memberStore = useMemberStore()
-
-const { isLogin, isLoginError } = storeToRefs(memberStore)
-const { userLogin, getUserInfo } = memberStore
-const { changeMenuState } = useMenuStore()
+const router = useRouter();
+const memberStore = useMemberStore();
+const { isLogin, isLoginError } = storeToRefs(memberStore);
+const { userLogin, getUserInfo } = memberStore;
+const { changeMenuState } = useMenuStore();
 
 const loginUser = ref({
   user_id: "",
   user_password: "",
-})
+});
+
+const isRightPanelActive = ref(false);
 
 const login = async () => {
-  await userLogin(loginUser.value)
-  let token = sessionStorage.getItem("accessToken")
-  console.log(token)
-  console.log("isLogin: " + isLogin.value)
+  await userLogin(loginUser.value);
+  let token = sessionStorage.getItem("accessToken");
+  console.log(token);
+  console.log("isLogin: " + isLogin.value);
   if (isLogin.value) {
-    getUserInfo(token)
-    changeMenuState()
-    router.replace("/")
+    getUserInfo(token);
+    changeMenuState();
+    router.replace("/");
   }
-}
+};
+
+const togglePanel = () => {
+  isRightPanelActive.value = !isRightPanelActive.value;
+};
 </script>
 
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-10">
-        <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-          <mark class="orange">로그인</mark>
-        </h2>
-      </div>
-      <div class="col-lg-10">
-        <form>
-          <div class="form-check mb-3 float-end">
-            <input class="form-check-input" type="checkbox" />
-            <label class="form-check-label" for="saveid"> 아이디저장 </label>
+  <div class="page-container">
+    <div class="auth-container">
+      <div :class="['container', { 'right-panel-active': isRightPanelActive }]">
+        <!-- Sign In -->
+        <div class="container__form container--signin">
+          <form class="form" id="form2" @submit.prevent="login">
+            <h2 class="form__title">Sign In</h2>
+            <div class="form-check mb-3 float-end">
+              <input class="form-check-input" type="checkbox" />
+              <label class="form-check-label" for="saveid"> Remember Me </label>
+            </div>
+            <div class="mb-3 text-start">
+              <label for="userid" class="form-label">Username: </label>
+              <input
+                  type="text"
+                  class="form-control"
+                  v-model="loginUser.user_id"
+                  placeholder="Username..."
+              />
+            </div>
+            <div class="mb-3 text-start">
+              <label for="userpwd" class="form-label">Password: </label>
+              <input
+                  type="password"
+                  class="form-control"
+                  v-model="loginUser.user_password"
+                  @keyup.enter="login"
+                  placeholder="Password..."
+              />
+            </div>
+            <div class="mb-3 text-start" v-if="isLoginError === true">
+              <div class="alert alert-danger" role="alert">
+                Please check your username or password
+              </div>
+            </div>
+            <div class="col-auto text-center">
+              <button type="submit" class="btn btn-outline-primary mb-3">
+                Sign In
+              </button>
+              <button type="button" class="btn btn-outline-success ms-1 mb-3" @click="togglePanel">Sign Up</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Sign Up -->
+        <div class="container__form container--signup">
+          <form action="#" class="form" id="form1" @submit.prevent="togglePanel">
+            <h2 class="form__title">Sign Up</h2>
+            <input type="text" placeholder="User" class="input" />
+            <input type="email" placeholder="Email" class="input" />
+            <input type="password" placeholder="Password" class="input" />
+            <button class="btn">Sign Up</button>
+          </form>
+        </div>
+
+        <!-- Overlay -->
+        <div class="container__overlay">
+          <div class="overlay">
+            <div class="overlay__panel overlay--left">
+              <button class="btn" @click="togglePanel">Sign In</button>
+            </div>
+            <div class="overlay__panel overlay--right">
+              <button class="btn" @click="togglePanel">Sign Up</button>
+            </div>
           </div>
-          <div class="mb-3 text-start">
-            <label for="userid" class="form-label">아이디 : </label>
-            <input
-              type="text"
-              class="form-control"
-              v-model="loginUser.user_id"
-              placeholder="아이디..."
-            />
-          </div>
-          <div class="mb-3 text-start">
-            <label for="userpwd" class="form-label">비밀번호 : </label>
-            <input
-              type="password"
-              class="form-control"
-              v-model="loginUser.user_password"
-              @keyup.enter="login"
-              placeholder="비밀번호..."
-            />
-          </div>
-          <div class="mb-3 text-start" v-if="isLoginError === true">
-            <div class="alert alert-danger" role="alert">아이디 또는 비밀번호 확인해 주세요</div>
-          </div>
-          <div class="col-auto text-center">
-            <button type="button" class="btn btn-outline-primary mb-3" @click="login">
-              로그인
-            </button>
-            <button type="button" class="btn btn-outline-success ms-1 mb-3">회원가입</button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
+    <router-view></router-view>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+:root {
+  /* COLORS */
+  --white: #e9e9e9;
+  --gray: #333;
+  --blue: #0367a6;
+  --lightblue: #008997;
+
+  /* RADII */
+  --button-radius: 0.7rem;
+
+  /* SIZES */
+  --max-width: 758px;
+  --max-height: 420px;
+
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+  Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+body {
+  align-items: center;
+  background-color: var(--white);
+  background: url("https://res.cloudinary.com/dci1eujqw/image/upload/v1616769558/Codepen/waldemar-brandt-aThdSdgx0YM-unsplash_cnq4sb.jpg");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: grid;
+  height: 100vh;
+  place-items: center;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.auth-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form__title {
+  font-weight: 300;
+  margin: 0;
+  margin-bottom: 1.25rem;
+}
+
+.link {
+  color: var(--gray);
+  font-size: 0.9rem;
+  margin: 1.5rem 0;
+  text-decoration: none;
+}
+
+.container {
+  background-color: var(--white);
+  border-radius: var(--button-radius);
+  box-shadow: 0 0.9rem 1.7rem rgba(0, 0, 0, 0.25),
+  0 0.7rem 0.7rem rgba(0, 0, 0, 0.22);
+  max-width: var(--max-width);
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.container__form {
+  height: 100%;
+  position: relative;
+  transition: all 0.6s ease-in-out;
+}
+
+.container--signin {
+  width: 100%;
+  z-index: 2;
+}
+
+.container--signup {
+  opacity: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.container.right-panel-active .container--signin {
+  transform: translateX(100%);
+}
+
+.container.right-panel-active .container--signup {
+  animation: show 0.6s;
+  opacity: 1;
+  transform: translateX(100%);
+  z-index: 5;
+}
+
+.container__overlay {
+  height: 100%;
+  left: 50%;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  transition: transform 0.6s ease-in-out;
+  width: 50%;
+  z-index: 100;
+}
+
+.container.right-panel-active .container__overlay {
+  transform: translateX(-100%);
+}
+
+.overlay {
+  background-color: var(--lightblue);
+  background: url("https://res.cloudinary.com/dci1eujqw/image/upload/v1616769558/Codepen/waldemar-brandt-aThdSdgx0YM-unsplash_cnq4sb.jpg");
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  left: -100%;
+  position: relative;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+  width: 200%;
+}
+
+.container.right-panel-active .overlay {
+  transform: translateX(50%);
+}
+
+.overlay__panel {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: center;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  transform: translateX(0);
+  transition: transform 0.6s ease-in-out;
+  width: 50%;
+}
+
+.overlay--left {
+  transform: translateX(-20%);
+}
+
+.container.right-panel-active .overlay--left {
+  transform: translateX(0);
+}
+
+.overlay--right {
+  right: 0;
+  transform: translateX(0);
+}
+
+.container.right-panel-active .overlay--right {
+  transform: translateX(20%);
+}
+
+.btn {
+  background-color: var(--blue);
+  background-image: linear-gradient(90deg, var(--blue) 0%, var(--lightblue) 74%);
+  border-radius: 20px;
+  border: 1px solid var(--blue);
+  color: var(--white);
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: bold;
+  letter-spacing: 0.1rem;
+  padding: 0.9rem 4rem;
+  text-transform: uppercase;
+  transition: transform 80ms ease-in;
+}
+
+.form > .btn {
+  margin-top: 1.5rem;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn:focus {
+  outline: none;
+}
+
+button:disabled {
+  cursor: default;
+  opacity: 0.5;
+  transform: none;
+}
+
+@keyframes show {
+  0%,
+  49.99% {
+    opacity: 0;
+    z-index: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 1;
+    z-index: 5;
+  }
+}
+</style>
