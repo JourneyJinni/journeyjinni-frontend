@@ -13,7 +13,7 @@
 
   <div class="mb-3">
     <label for="destinationImages" class="form-label fs-5 fw-bold">이미지 업로드</label>
-    <input class="form-control" type="file" id="destinationImages" accept="image/*" @change="handleImageUpload">
+    <input class="form-control" type="file" id="destinationImages" accept="image/*" @change="handleImageUpload" multiple>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
@@ -42,26 +42,35 @@ const options = {
   useWebWorker: true // webworker 사용 여부
 };
 
-const image = ref([]);
+const image = ref();
 const handleImageUpload = async (event) => {
   const files = event.target.files;
   for (const file of files) {
+      let metadata = await exifr.parse(file);
+      coordinate.value.latitude = metadata.latitude;
+      coordinate.value.longitude = metadata.longitude;
     // 메타데이터 추출
-    await getMetadata(file);
+      getLocationList(
+        coordinate.value,
+        (response) => {
+          attractionStore.searchedList = [];
+          attractionStore.searchedList = response.data;
+        }
+    )
 
     console.log("file : ", file);
     // 이미지 압축
     const compressedFile = await imageCompression(file, options);
 
-    image.value.push(compressedFile);
+    image.value = compressedFile;
     //console.log(++count);
   }
 };
 
 const submitForm = async () => {
   const formData = new FormData();
-  console.log("image : " , image.value[0]);
-  formData.append('images', image.value[0], `image1.jpg`);
+  console.log("image : " , image.value);
+  formData.append('file', image.value, `image1.jpg`);
   try {
     const response = await axios.post('http://localhost/compare', formData, {
       headers: {
@@ -76,30 +85,30 @@ const submitForm = async () => {
 
 
 // 메타데이터를 추출하는 함수
-const getMetadata = async (event) => {
-  const files = event.target.files;
-  try {
-    console.log("file", files);
-    let metadata =''
-    for (const file of files) {
-      metadata = await exifr.parse(file);
-    }
-    console.log("metadata", metadata);
-    coordinate.value.latitude = metadata.latitude;
-    coordinate.value.longitude = metadata.longitude;
-
-    getLocationList(
-        coordinate.value,
-        (response) => {
-          attractionStore.searchedList = [];
-          attractionStore.searchedList = response.data;
-        }
-    )
-  } catch (error) {
-    console.error('메타데이터가 없습니다...', error);
-    return {};
-  }
-};
+// const getMetadata = async (event) => {
+//   const files = event.target.files;
+//   try {
+//     console.log("file", files);
+//     let metadata =''
+//     for (const file of files) {
+//       metadata = await exifr.parse(file);
+//     }
+//     console.log("metadata", metadata);
+//     coordinate.value.latitude = metadata.latitude;
+//     coordinate.value.longitude = metadata.longitude;
+//
+//     getLocationList(
+//         coordinate.value,
+//         (response) => {
+//           attractionStore.searchedList = [];
+//           attractionStore.searchedList = response.data;
+//         }
+//     )
+//   } catch (error) {
+//     console.error('메타데이터가 없습니다...', error);
+//     return {};
+//   }
+// };
 
 
 </script>
