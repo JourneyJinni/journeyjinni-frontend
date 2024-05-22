@@ -108,7 +108,10 @@ const deleteAttraction = () => {
     refreshAttractions();
     })
 }
-
+const rollback = () => {
+    attractionName.value = props.attraction.attraction_name;
+    attractionDes.value = props.attraction.attraction_description;
+}
 
 
 </script>
@@ -140,9 +143,9 @@ const deleteAttraction = () => {
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="submitForm">수정</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="deleteAttraction">삭제</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+        <button type="button" class="btn btn-success" data-bs-dismiss="modal" @click="submitForm">저장</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" @click="deleteAttraction">삭제</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="rollback">취소</button>
         
     </div>
     </div>
