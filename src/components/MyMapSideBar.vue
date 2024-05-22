@@ -80,16 +80,6 @@ function toggleSidebar() {
   isSidebarVisible.value = !isSidebarVisible.value;
 }
 
-    
-
-
-const deleteAttraction = (attraction_id) => {
-  axios.delete("http://localhost/delete-userattraction/" + attraction_id)
-    .then(({ data }) => {
-      alert("삭제했습니다.")
-      getUserTrip();
-  })
-}
 
 const emit = defineEmits(['moveToMarker','refreshAttractions'])
 const moveToMarker = (attractionId) => {
@@ -126,7 +116,7 @@ const openTripSettingModal = (trip) => {
 };
 const openAttractionSettingModal = (attraction) => {
   currentAttraction.value = attraction;
-  if (currentTrip.value !== null) {
+  if (currentAttraction.value !== null) {
     const modalElement = document.querySelector(`#myAttractionSettingModal`);
     const modalInstance = ref();
     if (!modalInstance.value) {
@@ -313,6 +303,7 @@ const openAttractionSettingModal = (attraction) => {
       border: none;
       padding: 0;
       cursor: pointer;
+      z-index: 1000;
     }
 
 

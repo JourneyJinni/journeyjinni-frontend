@@ -40,6 +40,9 @@ const deleteTrip = () => {
       refreshAttractions();
   })
 }
+const rollback = () => {
+  tripName.value= props.trip.trip_name
+}
 </script>
 
 <template>
@@ -57,7 +60,7 @@ const deleteTrip = () => {
         <div class="modal-footer">
           <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="updateTrip">수정</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="deleteTrip">삭제</button>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="rollback">취소</button>
         </div>
       </div>
     </div>

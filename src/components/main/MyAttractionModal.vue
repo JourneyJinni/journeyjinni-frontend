@@ -23,6 +23,7 @@ const images = ref([]);
 const metadataList = ref([]);
 const attractionName = ref("");
 const attractionDes = ref("");
+const fileInput = ref(null);
 
 const options = {
     maxSizeMB: 1, // 허용하는 최대 사이즈 지정
@@ -48,7 +49,8 @@ const getMetadata = async (file) => {
 
 // 이미지 파일 압축
 const handleImageUpload = async (event) => {
-    const files = event.target.files;
+  const files = event.target.files;
+  let count = 0;
     for (const file of files) {
     // 메타데이터 추출
     const metadata = await getMetadata(file);
@@ -60,20 +62,21 @@ const handleImageUpload = async (event) => {
     const compressedFile = await imageCompression(file, options);
     
     images.value.push(compressedFile);
-
-    }
+      //console.log(++count);
+  }
+  alert(images.value.length)
 };
 
 
 const submitForm = async () => {
-    const formData = new FormData();
-    images.value.forEach((image, index) => {
-        // 이미지 파일과 메타데이터 추가
+  const formData = new FormData();
+  alert(images.value.length);
+  for (let i = 0; i < images.value.length; i++){
     
-    formData.append('images', image, `image${index + 1}.jpg`);
-    formData.append('metadata', JSON.stringify(metadataList.value[index]));
+    formData.append('images', images.value[i], `image${i + 1}.jpg`);
+    formData.append('metadata', JSON.stringify(metadataList.value[i]));
     
-    });
+    }
     formData.append('tripId', props.tripId);
     console.log(props.tripId);
     formData.append('attractionName', attractionName.value);
@@ -101,6 +104,9 @@ onMounted(() => {
       attractionDes.value = '';
       images.value = [];
       metadataList.value = [];
+      if (fileInput.value) {
+        fileInput.value.value = null; // 파일 입력 필드 초기화
+      }
     });
     
 
@@ -135,7 +141,7 @@ onMounted(() => {
             <!--  이미지 업로드           -->
             <div class="mb-3">
               <label for="destinationImages" class="form-label">이미지 업로드</label>
-              <input class="form-control" type="file" id="destinationImages" accept="image/*" @change="handleImageUpload" multiple>
+              <input ref="fileInput" class="form-control" type="file" id="destinationImages" accept="image/*" @change="handleImageUpload" multiple>
             </div>
           </form>
         </div>
