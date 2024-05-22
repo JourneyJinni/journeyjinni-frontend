@@ -15,6 +15,11 @@
     <label for="destinationImages" class="form-label fs-5 fw-bold">이미지 업로드</label>
     <input class="form-control" type="file" id="destinationImages" accept="image/*" @change="handleImageUpload" multiple>
   </div>
+
+  <div v-if="findImage" class="mt-3">
+    <img :src= "'data:image/jpeg;base64,' + viewImage.image" alt="Uploaded Image" class="img-fluid">
+  </div>
+
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
     <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="submitForm">확인</button>
@@ -43,6 +48,8 @@ const options = {
 };
 
 const image = ref();
+const findImage = ref(null);
+let viewImage;
 const handleImageUpload = async (event) => {
   const files = event.target.files;
   for (const file of files) {
@@ -77,39 +84,13 @@ const submitForm = async () => {
         'Content-Type': 'multipart/form-data'
       }
     });
-    console.log(response.data);
+    findImage.value = response.data;
+    viewImage = response.data;
+    console.log("결과" , viewImage);
   } catch (error) {
     console.log(error);
   }
 }
-
-
-// 메타데이터를 추출하는 함수
-// const getMetadata = async (event) => {
-//   const files = event.target.files;
-//   try {
-//     console.log("file", files);
-//     let metadata =''
-//     for (const file of files) {
-//       metadata = await exifr.parse(file);
-//     }
-//     console.log("metadata", metadata);
-//     coordinate.value.latitude = metadata.latitude;
-//     coordinate.value.longitude = metadata.longitude;
-//
-//     getLocationList(
-//         coordinate.value,
-//         (response) => {
-//           attractionStore.searchedList = [];
-//           attractionStore.searchedList = response.data;
-//         }
-//     )
-//   } catch (error) {
-//     console.error('메타데이터가 없습니다...', error);
-//     return {};
-//   }
-// };
-
 
 </script>
 
