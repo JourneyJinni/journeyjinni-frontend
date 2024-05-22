@@ -11,7 +11,7 @@ const props = defineProps({
   },
   tripName: {
     type: String,
-    default: "여행 기록"
+    default: "이런 곳을 갔어요."
   }
 });
 
