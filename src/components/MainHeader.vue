@@ -38,13 +38,6 @@
               <li class="nav-item">
                 <router-link :to="{ name: 'mypage' }" class="nav-link">마이페이지</router-link>
               </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">내 정보</a>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">확인/수정</a></li>
-                  <li><a class="dropdown-item text-danger" href="#" @click="deleteUser(user_id)">회원 탈퇴</a></li>
-                </ul>
-              </li>
             </ul>
           </div>
           <div v-else>
