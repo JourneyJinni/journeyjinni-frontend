@@ -77,6 +77,14 @@ const prevPage = () => {
 </script>
 
 <template>
+  <div class="container mt-8">
+    <div class="card text-center shadow-sm p-2 mb-1 bg-body-tertiary rounded">
+      <div class="card-body">
+        <h5 class="card-title fw-bold">자유 게시판입니다</h5>
+        <p class="card-text text-muted">문의사항이나 이야기 할거리를 적어주세요.</p>
+      </div>
+    </div>
+  </div>
   <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-lg-10">

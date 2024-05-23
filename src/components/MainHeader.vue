@@ -14,7 +14,7 @@
       <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <router-link :to="{ name: 'board' }" class="nav-link">게시판</router-link>
+            <router-link :to="{ name: 'board' }" class="nav-link">자유 게시판</router-link>
           </li>
           <li class="nav-item">
             <router-link :to="{ name: 'attraction' }" class="nav-link">관광지 검색</router-link>

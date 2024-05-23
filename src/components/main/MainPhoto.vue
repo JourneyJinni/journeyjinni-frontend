@@ -5,8 +5,8 @@
           <div class="col-md-9 row justify-content-center position-relative">
             <div class="row justify-content-center text-center text-white">
               <div style="height:30px;"></div>
-              <h2>여행지니에 오신것을 환영합니다.</h2>
-              <h4>사진으로 여러분의 기록을 저장하고 공유하세요.</h4>
+              <h2 style="font-size: 2.5em; font-weight: bold; color: #ffffff; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">여행지니에 오신것을 환영합니다.</h2>
+              <h4 style="font-size: 1.5em; font-weight: normal; color: #ffffff; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);">사진으로 여러분의 기록을 저장하고 공유하세요.</h4>
             </div>
           </div>
           <div class="col-md-3 row justify-content-center position-relative align-items-center">

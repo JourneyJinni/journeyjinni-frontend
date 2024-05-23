@@ -58,7 +58,16 @@ onMounted(() => {
 
 <template>
   <div class="container my-5">
-    <h1 class="text-center mb-4">{{ props.tripName }}</h1>
+    <div class="col-md-12">
+      <div class="container mt-3">
+        <div class="card text-center shadow-sm p-2 mb-5 bg-body-tertiary rounded">
+          <div class="card-body">
+            <h5 class="card-title fw-bold">이런 곳을 갔어요</h5>
+            <p class="card-text text-muted">버튼을 클릭하시면 기록된 사진이 나타납니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row">
       <!-- 관광지 리스트 -->
       <div class="col-md-4" v-for="attraction in attractions" :key="attraction.attractionId">
