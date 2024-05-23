@@ -2,9 +2,9 @@
   <nav class="navbar navbar-expand-sm shadow bg-light navbar-light sticky-top custom-navbar">
     <div class="container-fluid">
       <a class="navbar-brand text-primary fw-bold" href="/">
-        <img src="@/assets/logo.png" 
+        <img src="@/assets/iocon.png"
              alt="Logo" 
-             width="70"
+             width="130"
              height='50'
              class="d-inline-block">
       </a>
