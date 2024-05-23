@@ -197,7 +197,6 @@ const resetForm = () => {
         <div class="container__overlay">
           <div class="overlay">
             <div class="overlay__panel overlay--left">
-              <h2>여행지니에서 로그인 하시고 다양한 기록을 남기세요</h2>
               <button class="btn1 btn-outline-secondary mt-2" @click="togglePanel">Sign In</button>
             </div>
             <div class="overlay__panel overlay--right">

@@ -5,14 +5,15 @@
           <div class="col-md-9 row justify-content-center position-relative">
             <div class="row justify-content-center text-center text-white">
               <div style="height:30px;"></div>
-              <h2>Enjoy Trip에 오신것을 환영합니다.</h2>
-              <h4>나의 여행계획을 사랑하는 사람들과 공유하세요.</h4>
+              <h2>여행지니에 오신것을 환영합니다.</h2>
+              <h4>사진으로 여러분의 기록을 저장하고 공유하세요.</h4>
             </div>
           </div>
           <div class="col-md-3 row justify-content-center position-relative align-items-center">
           </div>
         </div>
       </div>
+      <br>
     </header>
 </template>
 

@@ -4,7 +4,7 @@
       <a class="navbar-brand text-primary fw-bold" href="/">
         <img src="@/assets/logo.png" 
              alt="Logo" 
-             width="150" 
+             width="70"
              height='50'
              class="d-inline-block">
       </a>
