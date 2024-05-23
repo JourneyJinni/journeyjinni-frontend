@@ -4,6 +4,7 @@
       <img :src="imgSrc" class="card-img-top" alt="대체이미지 설명">
       <div class="card-body">
         <h5 class="card-title text-center">{{ trip.tripName }}</h5>
+        <p class="card-title text-center">{{trip.userId}}</p>
       </div>
     </div>
   </router-link>
