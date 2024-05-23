@@ -2,6 +2,7 @@
 import { ref,onMounted, watch } from "vue";
 import axios from 'axios';
 import { Modal } from "bootstrap";
+import Swal from 'sweetalert2';
 const props = defineProps({
   image: {
     type: Object,
@@ -38,11 +39,33 @@ const saveImageInfo = async () => {
 }
 
 const deleteImage = () => {
-  axios.delete("http://localhost/delete-mapimagebyid/" + props.image.image_id)
+    Swal.fire({
+  title: "여행 기록을 지우시겠습니까?",
+  text: "되돌릴 수 없어요!",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "yes"
+}).then((result) => {
+  if (result.isConfirmed) {
+    axios.delete("http://localhost/delete-mapimagebyid/" + props.image.image_id)
     .then(({ data }) => {
-    alert("삭제했습니다.")
     refreshImages();
+      Swal.fire({
+      title: "삭제 성공",
+      text: "여행기록이 삭제되었습니다.",
+      icon: "success"
+      });
+    }).catch((error) => {
+      Swal.fire({
+      icon: "error",
+      title: "삭제 실패",
+      text: error +"에러가 발생되었습니다.",
+      });
     })
+  }
+});
 }
 const emit = defineEmits(['refreshimages']);
 const refreshImages = () => {
