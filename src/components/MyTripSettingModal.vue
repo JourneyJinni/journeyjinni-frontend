@@ -67,10 +67,10 @@ const toggleSharing = () => {
   } else {
     tripShared.value = false;
     Swal.fire({
-    title: "여행 공유 시작",
-    text: "이제 이 여행을 다른 사람과 공유합니다!",
-    icon: "success",
-    })
+    icon: "error",
+    title: "여행 공유 중지",
+    text: "이제 이 여행은 다른 사람과 공유하지 않습니다!",
+    });
   }
 
 
@@ -93,7 +93,7 @@ const toggleSharing = () => {
           
           <div style="margin-top: 20px;">
             <button type="button" class="btn btn-primary"  v-if="!tripShared" @click="toggleSharing">공유 시작</button>
-            <button type="button" class="btn btn-danger"  v-if="tripShared" @click="toggleSharing">공유 중</button>
+            <button type="button" class="btn btn-danger"  v-if="tripShared" @click="toggleSharing">공유 중지</button>
           </div>
         </div>
         <div class="modal-footer">
