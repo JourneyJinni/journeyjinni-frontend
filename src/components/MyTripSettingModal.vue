@@ -2,6 +2,8 @@
 import { ref,onMounted, watch } from "vue";
 import axios from 'axios';
 import { Modal } from "bootstrap";
+import Swal from 'sweetalert2'
+
 const props = defineProps({
   trip: {
     type: Object,
@@ -56,12 +58,24 @@ const rollback = () => {
 }
 const toggleSharing = () => {
   if (!tripShared.value) {
+    Swal.fire({
+    title: "여행 공유 시작",
+    text: "이제 이 여행을 다른 사람과 공유합니다!",
+    icon: "success",
+    })
     tripShared.value = true;
   } else {
     tripShared.value = false;
+    Swal.fire({
+    title: "여행 공유 시작",
+    text: "이제 이 여행을 다른 사람과 공유합니다!",
+    icon: "success",
+    })
   }
 
+
 }
+
 </script>
 
 <template>

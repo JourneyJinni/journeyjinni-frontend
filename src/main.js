@@ -9,7 +9,7 @@ import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import "bootstrap";
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import Swal from 'sweetalert2'
 import { useKakao } from 'vue3-kakao-maps';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js'; // 이 줄을 추가하여 부트스트랩 JS를 포함합니다.
 
