@@ -63,4 +63,25 @@ onMounted(() => {
 .card:hover {
   background-color: #f8f9fa;
 }
+.card {
+  width: 100%;
+  max-width: 300px; /* 카드의 최대 너비 설정 */
+  margin: 20px auto; /* 중앙 정렬 및 간격 설정 */
+}
+
+.card-img-top {
+  width: 100%;
+  height: 200px; /* 고정된 높이 설정 */
+  object-fit: cover; /* 이미지 자르기 및 크기 조정 */
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.text-center {
+  text-align: center;
+}
 </style>

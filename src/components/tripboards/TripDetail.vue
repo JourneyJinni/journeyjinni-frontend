@@ -71,19 +71,18 @@ onMounted(() => {
     <div class="row">
       <!-- 관광지 리스트 -->
       <div class="col-md-4" v-for="attraction in attractions" :key="attraction.attractionId">
-        <div class="card mb-3" @click="fetchImageDetail(attraction.attractionId,  attraction.attractionName)">
+        <div class="card mb-3" @click="fetchImageDetail(attraction.attractionId, attraction.attractionName)">
           <div class="card-body">
             <h5 class="card-title">{{ attraction.attractionName }}</h5>
-            <p class="card-text"> {{ attraction.attractionDescription }}</p>
+            <p class="card-text">{{ attraction.attractionDescription }}</p>
           </div>
         </div>
       </div>
     </div>
 
-
     <section class="gallery-block compact-gallery">
       <div class="container">
-        <h3 class="text-center mb-4">{{attractionName}}</h3>
+        <h3 class="text-center mb-4">{{ attractionName }}</h3>
         <div class="row no-gutters">
           <div v-for="image in selectedAttractionImages" :key="image.imageId" class="col-md-6 col-lg-4 item zoom-on-hover">
             <a class="lightbox" :href="'data:image/jpeg;base64,' + image.image">
@@ -102,6 +101,7 @@ onMounted(() => {
     </section>
   </div>
 </template>
+
 
 
 <style scoped>
@@ -155,5 +155,6 @@ onMounted(() => {
   font-size: 0.9rem;
   margin: 0;
 }
+
 
 </style>

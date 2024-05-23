@@ -20,7 +20,8 @@
         <div class="card col-lg-3 col-md-6" v-for="attraction in mainAttractionList" :key="attraction.id">
           <div class="card-img-wrapper mt-2">
             <img :src="attraction.firstImage" class="card-img-top img-fluid" alt=""
-                 onerror="this.onerror=null; this.src='src/assets/noimg.jpg'">
+                 onerror="this.onerror=null; this.src='src/assets/noimg.jpg'"
+                 style='width: 100%; height: 300px;'>
           </div>
           <div class="card-body">
             <h5 class="card-title">{{ attraction.title }}</h5>
@@ -77,4 +78,5 @@ axios.get("http://localhost/")
   width: 100vw;
   height: 100vh;
 }
+
 </style>
