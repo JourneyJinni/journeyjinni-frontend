@@ -123,6 +123,16 @@ const refreshImages = () => {
   
 
   <div class="container">
+    <div class="col-md-12">
+      <div class="container mt-3">
+        <div class="card text-center shadow-sm p-2 mb-5 bg-body-tertiary rounded">
+          <div class="card-body">
+            <h5 class="card-title fw-bold">나의 여행 기록</h5>
+            <p class="card-text text-muted">이제까지 여행했던 추억을 등록하고 공유해보세요!</p>
+          </div>
+        </div>
+      </div>
+    </div>
     <KakaoMap
     :lat="lat" :lng="lng" @onLoadKakaoMap="onLoadKakaoMap"
     :level='13'

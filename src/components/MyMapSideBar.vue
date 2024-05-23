@@ -136,53 +136,46 @@ const openAttractionSettingModal = (attraction) => {
     </button>
 
     <div id="sidebar" :class="{'active': isSidebarVisible}">
-    <div class="sidebar-header d-flex justify-content-between align-items-center">
-      <button class="image-button-left" @click="toggleSidebar">
-        <img src="@/assets/sidebar_MyMap_right.png" alt="Toggle Sidebar">
-      </button>
-      <h5>나의 여행</h5>
-      <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#addTripModal">+</button>
-    </div>
-    <div class="list-group" v-for="(trip, index) in myTripList" :key="trip.trip_id">
-      <button
-        @click="tripListFlags[index] = !tripListFlags[index]" 
-        class="list-group-item list-group-item-action"
-        aria-current="true">
-        <div class="d-flex w-100 justify-content-between">
-          <p class="mb-1">{{ trip.trip_name }}</p>
-
-          <button class="btn btn-sm setting-button" @click.stop="openTripSettingModal(trip)">
-            <img src="@/assets/settingIcon.png" alt="Setting Attraction">
-          </button>
-          
-          <button class="btn btn-sm" @click.stop="openAttractionAddModal(trip.trip_id)">
-            +
-          </button>
-
-         
-
-        </div>
-        <div v-if="tripListFlags[index]" class="margin-5px">
-          <button
-            class="list-group-item list-group-item-action"
-            @click.stop="moveToMarker(attraction.attraction_id)"
-            v-for="attraction in myAttractionMap.get(trip.trip_id)"
-            :key="attraction.attraction_id"
-
-          >
-            <div class="d-flex w-100 justify-content-between">
-              <p class="mb-1">{{ attraction.attraction_name }}</p>
-              <button class="btn btn-sm setting-button" @click.stop="openAttractionSettingModal(attraction)">
-                <img src="@/assets/settingIcon.png" alt="Setting Attraction">  
+      <div class="sidebar-header d-flex justify-content-between align-items-center">
+        <button class="image-button-left" @click="toggleSidebar">
+          <img src="@/assets/sidebar_MyMap_right.png" alt="Toggle Sidebar">
+        </button>
+        <h5>나의 여행</h5>
+        <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#addTripModal">+</button>
+      </div>
+      <div class="list-group" v-for="(trip, index) in myTripList" :key="trip.trip_id">
+        <button
+          @click="tripListFlags[index] = !tripListFlags[index]" 
+          class="list-group-item list-group-item-action"
+          aria-current="true">
+          <div class="d-flex w-100 justify-content-between">
+            <p class="mb-1">{{ trip.trip_name }}</p>
+            <div class="d-flex">
+              <button class="btn btn-sm setting-button" @click.stop="openTripSettingModal(trip)">
+                <img src="@/assets/settingIcon.png" alt="Setting Attraction">
               </button>
-              
+              <button class="btn btn-sm" @click.stop="openAttractionAddModal(trip.trip_id)">
+                +
+              </button>
             </div>
-            
-          </button>
-        </div>
-      </button>
+          </div>
+          <div v-if="tripListFlags[index]" class="margin-5px">
+            <button
+              class="list-group-item list-group-item-action"
+              @click.stop="moveToMarker(attraction.attraction_id)"
+              v-for="attraction in myAttractionMap.get(trip.trip_id)"
+              :key="attraction.attraction_id">
+              <div class="d-flex w-100 justify-content-between">
+                <p class="mb-1">{{ attraction.attraction_name }}</p>
+                <button class="btn btn-sm setting-button" @click.stop="openAttractionSettingModal(attraction)">
+                  <img src="@/assets/settingIcon.png" alt="Setting Attraction">  
+                </button>
+              </div>
+            </button>
+          </div>
+        </button>
+      </div>
     </div>
-  </div>
 
   <div class="modal fade" id="addTripModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
