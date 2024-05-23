@@ -73,6 +73,12 @@ const setMap = (latitude, longitude) => {
 
 watch(() => attractionStore.searchedList, () => {
   console.log("list", attractionStore.searchedList)
+  setMap(attractionStore.searchedList[0].latitude, attractionStore.searchedList[0].longitude)
+});
+
+watch(() => attractionStore.coordinateData, () => {
+  console.log("store에서 가져온 값 : ", attractionStore.coordinateData )
+  setMap(attractionStore.coordinateData.image.latitude, attractionStore.coordinateData.image.longitude)
 });
 
 </script>

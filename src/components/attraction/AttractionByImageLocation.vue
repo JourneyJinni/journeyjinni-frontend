@@ -21,10 +21,10 @@
       <div v-if="findImage" class="card w-100 mb-2">
         <img :src="'data:image/jpeg;base64,' + viewImage.image.image" alt="Uploaded Image" class="img-fluid card-img-top" style="height: auto;">
         <div class="card-body">
-          <p class="card-text text-center">여기 근처인거 같아요?</p>
+          <p class="card-text text-center">이 이미지가 가장 비슷해요!</p>
         </div>
       </div>
-      위도 경도가 없다면?
+      <i>위도 경도가 없다면?</i>
       <button type="button" class="btn btn-primary w-100" @click="submitForm">인공지능에게 물어보기</button>
     </div>
   </div>
@@ -94,6 +94,10 @@ const submitForm = async () => {
     findImage.value = response.data;
     viewImage = response.data;
     console.log("가장 비슷한 이미지  : " , viewImage);
+
+    attractionStore.coordinateData = viewImage;
+
+    console.log("store", attractionStore.coordinateData);
   } catch (error) {
     console.log(error);
   }

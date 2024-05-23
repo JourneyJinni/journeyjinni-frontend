@@ -81,7 +81,7 @@ onMounted(() => {
               <div class="image-container">
                 <img class="img-fluid image" :src="'data:image/jpeg;base64,' + image.image">
                 <span class="description">
-                  <span class="description-heading">사진 설명 : {{ image.imageDescription }}</span>
+                  <span class="description-heading">{{ image.imageDescription }}</span>
                   <br>
                   <span class="description-body">{{ formatDate(image.date) }}</span>
                 </span>

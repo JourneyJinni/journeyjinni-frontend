@@ -9,9 +9,13 @@ export const useAttractionStore = defineStore("memberStore", () => {
 
     let searchedList = ref([])
 
+    let coordinateData = ref({
+    });
+
 
     return {
-        searchedList
+        searchedList,
+        coordinateData
     }
 } ,  {
     persist: true
