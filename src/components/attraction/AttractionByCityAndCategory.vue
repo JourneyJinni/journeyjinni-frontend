@@ -12,12 +12,13 @@ const sido = ref("0");
 const gugun = ref("0");
 const attractionType = ref("0");
 const attractionStore = useAttractionStore();
-
+const keyWord = ref("");
 
 const searchOptions = ref({
   sido: "0",
   gugun: "0",
-  attractionType: "0"
+  attractionType: "0",
+  keyWord: ""
 });
 
 
@@ -41,6 +42,7 @@ const searchStart = () => {
   searchOptions.value.sido = sido.value;
   searchOptions.value.gugun = gugun.value;
   searchOptions.value.attractionType = attractionType.value;
+  searchOptions.value.keyWord = keyWord.value;
   console.log(searchOptions)
   filterList(searchOptions)
 };
@@ -99,7 +101,7 @@ const getGugun = (event) => {
                 <option v-for="category in categoryList" :key="category.code" :value="category.code">{{ category.name }}</option>
             </select>
             <input id="search-keyword" class="form-control form-control-lg me-5" type="search" placeholder="검색어"
-                aria-label="검색어" />
+                aria-label="검색어" v-model='keyWord'/>
                 <button id="btn-search" class="btn btn-outline-success" type="button" @click='searchStart'>검색</button>
 
           </form>
