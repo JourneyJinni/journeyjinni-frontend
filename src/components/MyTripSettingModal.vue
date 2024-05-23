@@ -83,7 +83,7 @@ const toggleSharing = () => {
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="updateTrip">수정</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="updateTrip">저장</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="deleteTrip">삭제</button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="rollback">취소</button>
         </div>

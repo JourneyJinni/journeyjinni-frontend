@@ -24,6 +24,7 @@ const cities = ref([]);
 const categories = ref([]);
 const selectedCities = ref([]);
 const selectedCategories = ref([]);
+const keyWord = ref("");
 
 const getCity = () => {
   cityInfo(
