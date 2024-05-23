@@ -16,14 +16,21 @@
     <input class="form-control" type="file" id="destinationImages" accept="image/*" @change="handleImageUpload" multiple>
   </div>
 
-  <div v-if="findImage" class="mt-3">
-    <img :src= "'data:image/jpeg;base64,' + viewImage.image" alt="Uploaded Image" class="img-fluid">
+  <div class="d-flex justify-content-center mt-3">
+    <div class="d-flex flex-column align-items-center" style="width: 300px;">
+      <div v-if="findImage" class="card w-100 mb-2">
+        <img :src="'data:image/jpeg;base64,' + viewImage.image.image" alt="Uploaded Image" class="img-fluid card-img-top" style="height: auto;">
+        <div class="card-body">
+          <p class="card-text text-center">여기 근처인거 같아요?</p>
+        </div>
+      </div>
+      위도 경도가 없다면?
+      <button type="button" class="btn btn-primary w-100" @click="submitForm">인공지능에게 물어보기</button>
+    </div>
   </div>
 
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="submitForm">확인</button>
-  </div>
+
+
 </template>
 
 <script setup>
@@ -86,7 +93,7 @@ const submitForm = async () => {
     });
     findImage.value = response.data;
     viewImage = response.data;
-    console.log("결과" , viewImage);
+    console.log("가장 비슷한 이미지  : " , viewImage);
   } catch (error) {
     console.log(error);
   }
