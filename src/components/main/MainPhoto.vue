@@ -28,8 +28,9 @@
 }
 
 .background-image {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)), 
-                    url('https://source.unsplash.com/random/?trip,travel'); /* 이미지 및 어둡게 처리 */
+  background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)),
+                      url('https://www.oliverstravels.com/blog/wp-content/uploads/2019/10/Instagram.jpg');
+
   background-size: cover; /* 이미지 크기를 div에 맞춤 */
   background-position: center; /* 중앙 정렬 */
   background-repeat: no-repeat; /* 이미지 반복 방지 */
