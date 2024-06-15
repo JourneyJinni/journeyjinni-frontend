@@ -31,8 +31,8 @@
 - 여행 사진 게시판 제공
 
 ## 프로젝트 구조
-![제목 없는 다이어그램 drawio](https://github.com/JourneyJinni/journeyjinni-backend/assets/130115689/b46a6d46-f45b-4a91-ac57-033d2e905137)
 
+![제목 없는 다이어그램 drawio](https://github.com/JourneyJinni/journeyjinni-frontend/assets/130115689/446e9de2-136d-4aca-ad25-7b43ee2e77a4)
 
 
 ## Use case 다이어그램
