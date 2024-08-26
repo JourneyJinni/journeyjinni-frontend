@@ -17,32 +17,7 @@ const map = ref();
 const currentImage = ref({});
 const markerList = ref([]);
 
-const markerListT = [
-  {
-    lat: 37.27943075229118,
-    lng: 127.01763998406159
-  },
-  {
-    lat: 37.55915668706214,
-    lng: 126.92536526611102
-  },
-  {
-    lat: 35.13854258261161,
-    lng: 129.1014781294671
-  },
-  {
-    lat: 37.55518388656961,
-    lng: 126.92926237742505
-  },
-  {
-    lat: 35.20618517638034,
-    lng: 129.07944301057026
-  },
-  {
-    lat: 37.561110808242056,
-    lng: 126.9831268386891
-  }
-];
+
 const onLoadKakaoMap = (mapRef) => {
   map.value = mapRef;
 };
