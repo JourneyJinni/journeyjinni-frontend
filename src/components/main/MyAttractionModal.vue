@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import imageCompression from 'browser-image-compression';
 import exifr from 'exifr';
-
+const { VITE_VUE_API_URL } = import.meta.env;
 // props 정의
 const props = defineProps({
   tripId: {
@@ -82,7 +82,7 @@ const submitForm = async () => {
   formData.append('attractionDes', attractionDes.value);
 
   try {
-    const response = await axios.post('http://localhost/register-attraction', formData, {
+    const response = await axios.post(VITE_VUE_API_URL + '/register-attraction', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

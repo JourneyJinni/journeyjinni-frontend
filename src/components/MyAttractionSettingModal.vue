@@ -1,5 +1,5 @@
 <script setup>
-
+const { VITE_VUE_API_URL } = import.meta.env;
 import { computed, onMounted, ref, watch } from 'vue';
 import axios from 'axios';
 import imageCompression from 'browser-image-compression';
@@ -95,7 +95,7 @@ const submitForm = async () => {
     formData.append('attractionName', attractionName.value);
     formData.append('attractionDes', attractionDes.value);
     try {
-    const response = await axios.put('http://localhost/update-attractionbyid/' + props.attraction.attraction_id, formData, {
+    const response = await axios.put(VITE_VUE_API_URL + '/update-attractionbyid/' + props.attraction.attraction_id, formData, {
         headers: {
         'Content-Type': 'multipart/form-data'
         }
@@ -121,7 +121,7 @@ const deleteAttraction = () => {
   confirmButtonText: "yes"
 }).then((result) => {
   if (result.isConfirmed) {
-    axios.delete("http://localhost/delete-attractionbyid/" + props.attraction.attraction_id)
+    axios.delete(VITE_VUE_API_URL + "/delete-attractionbyid/" + props.attraction.attraction_id)
     .then(({ data }) => {
       refreshAttractions();
       Swal.fire({

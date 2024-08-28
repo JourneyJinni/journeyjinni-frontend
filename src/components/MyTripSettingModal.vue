@@ -1,7 +1,7 @@
 <script setup>
 import { ref,onMounted, watch } from "vue";
 import axios from 'axios';
-import { Modal } from "bootstrap";
+const { VITE_VUE_API_URL } = import.meta.env;
 import Swal from 'sweetalert2'
 
 const props = defineProps({
@@ -37,7 +37,7 @@ const updateTrip = () => {
     formData.append("isShared", 1); 
   }
   
-  axios.put('http://localhost/update-tripbyid/' + props.trip.trip_id, formData) 
+  axios.put(VITE_VUE_API_URL + '/update-tripbyid/' + props.trip.trip_id, formData)
     .then(({ data }) => {
       console.log(data);
       refreshAttractions();
@@ -58,7 +58,7 @@ const deleteTrip = () => {
   confirmButtonText: "yes"
 }).then((result) => {
   if (result.isConfirmed) {
-    axios.delete("http://localhost/delete-tripbyid/" + props.trip.trip_id)
+    axios.delete(VITE_VUE_API_URL + "/delete-tripbyid/" + props.trip.trip_id)
     .then(({ data }) => {
       refreshAttractions();
       Swal.fire({

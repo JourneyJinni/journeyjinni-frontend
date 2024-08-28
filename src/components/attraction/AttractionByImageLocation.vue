@@ -40,7 +40,7 @@ import {useAttractionStore} from "@/stores/Attraction.js";
 import {getLocationList} from "@/api/attraction.js";
 import imageCompression from "browser-image-compression";
 import axios from "axios";
-
+const { VITE_VUE_API_URL } = import.meta.env;
 const attractionStore = useAttractionStore();
 
 const coordinate = ref({
@@ -86,7 +86,7 @@ const submitForm = async () => {
   console.log("image : " , image.value);
   formData.append('file', image.value, `image1.jpg`);
   try {
-    const response = await axios.post('http://localhost/compare', formData, {
+    const response = await axios.post(VITE_VUE_API_URL + '/compare', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

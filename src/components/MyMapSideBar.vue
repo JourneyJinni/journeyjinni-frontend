@@ -6,6 +6,7 @@ import MyAttractionModal from "@/components/main/MyAttractionModal.vue";
 import MyTripSettingModal from '@/components/MyTripSettingModal.vue';
 import MyAttractionSettingModal from '@/components/MyAttractionSettingModal.vue'
 import { Modal } from 'bootstrap';
+const { VITE_VUE_API_URL } = import.meta.env;
 //사이드바 토글
 const isSidebarVisible = ref(false);
 //유저 아이디 불러오기
@@ -23,7 +24,7 @@ const currentAttraction = ref({});
 const registerTripName = ref("");
 //유저별 등록한 여행 불러오기
 const getUserTrip = () => {
-  axios.get("http://localhost/get-usertrip/" + userId)
+  axios.get(VITE_VUE_API_URL + "/get-usertrip/" + userId)
     .then(({ data }) => {
       myTripList.value = data;
       
@@ -42,7 +43,7 @@ const getUserTrip = () => {
 
 //여행별 등록한 여행지목록 가져오기
 const getUserAttraction = async (tripId) => {
-  axios.get("http://localhost/get-userattraction/" + tripId)
+  axios.get(VITE_VUE_API_URL + "/get-userattraction/" + tripId)
     .then(({ data }) => {
       myAttractionMap.set(tripId, data);
 
@@ -65,7 +66,7 @@ const  registerTrip = async () => {
   formData.append("userId", userId);
   formData.append("tripName", registerTripName.value);
   try {
-    const response = await axios.post('http://localhost/register-trip', formData, {
+    const response = await axios.post(VITE_VUE_API_URL + '/register-trip', formData, {
     });
     console.log(response.data);
   } catch (error) {

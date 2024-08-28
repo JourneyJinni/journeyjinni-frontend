@@ -12,7 +12,7 @@ const props = defineProps({
 const imageId = ref();
 const imageDescription = ref();
 const imageDate = ref();
-
+const { VITE_VUE_API_URL } = import.meta.env;
 watch(props, (newValue) => {
   imageId.value = newValue.image.image_id;
   imageDescription.value = newValue.image.image_description;
@@ -25,7 +25,7 @@ const saveImageInfo = async () => {
     formData.append('imageId', props.image.image_id);
     formData.append('imageDes', imageDescription.value);
     try {
-    const response = await axios.put('http://localhost/update-mapimagebyid/' + props.image.image_id, formData, {
+    const response = await axios.put(VITE_VUE_API_URL + '/update-mapimagebyid/' + props.image.image_id, formData, {
       headers: {
       'Content-Type': 'multipart/form-data'
       }

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ref } from 'vue'
 import {getAttractionListByFilter} from "@/api/attraction.js";
 import { useAttractionStore } from "@/stores/Attraction.js";
-
+const { VITE_VUE_API_URL } = import.meta.env;
 const cityList = ref([]);
 const gugunList = ref([]);
 const categoryList = ref([]);
@@ -22,7 +22,7 @@ const searchOptions = ref({
 });
 
 
-axios.get("http://localhost/getcity")
+axios.get(VITE_VUE_API_URL + "/getcity")
     .then(({ data }) => {
       cityList.value = data;
     })
@@ -30,7 +30,7 @@ axios.get("http://localhost/getcity")
       alert(error)
   })
 
-axios.get("http://localhost/getcategory")
+axios.get(VITE_VUE_API_URL + "/getcategory")
     .then(({ data }) => {
       categoryList.value = data;
     })
@@ -62,7 +62,7 @@ const filterList = (searchOptions) => {
 
 const getGugun = (event) => {
 
-  axios.get("http://localhost/getgugun/" + event.target.value)
+  axios.get(VITE_VUE_API_URL + "/getgugun/" + event.target.value)
   .then(({ data }) => {
     gugunList.value = data;
   })

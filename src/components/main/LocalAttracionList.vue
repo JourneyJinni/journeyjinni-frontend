@@ -49,7 +49,7 @@ import { ref } from "vue";
 import { Modal } from 'bootstrap';
 const mainAttractionList = ref([]);
 const currentAttraction = ref();
-
+const { VITE_VUE_API_URL } = import.meta.env;
 const openDetailModal = (attraction) => {
   currentAttraction.value = attraction;
   if (currentAttraction.value !== null) {
@@ -64,7 +64,7 @@ const openDetailModal = (attraction) => {
 
 
 
-axios.get("http://localhost/")
+axios.get(VITE_VUE_API_URL)
     .then(({data}) => {
       mainAttractionList.value = data;
       console.log(mainAttractionList)
