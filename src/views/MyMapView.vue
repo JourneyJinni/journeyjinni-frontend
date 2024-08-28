@@ -6,7 +6,7 @@ import axios from 'axios';
 import MyMapSideBar from '@/components/MyMapSideBar.vue';
 import { useMemberStore } from "@/stores/member"
 import { Modal } from 'bootstrap';
-
+const { VITE_VUE_API_URL } = import.meta.env;
 
 const images = ref([]);
 const memberStore = useMemberStore()
@@ -22,17 +22,16 @@ const onLoadKakaoMap = (mapRef) => {
   map.value = mapRef;
 };
 
-const infoVisble = ref(false);
 
 const marker = ref();
 
 const onLoadKakaoMapMarker = (newMarker) => {
   marker.value = newMarker;
 };
-
+``
 const fetchImage = async () => {
   try {
-    axios.get("http://localhost/get-mymap-imgs/" + userId)
+    axios.get(VITE_VUE_API_URL + "/get-mymap-imgs/" + userId)
       .then(({ data }) => {
         images.value = data;
         images.value.forEach((image) => {
@@ -78,12 +77,6 @@ const onClickKakaoMapMarker = (image) => {
 const refreshImages = () => {
   fetchImage();
 }
-// kakao.maps.load(() => {
-//   var map = new kakao.maps.Map(document.getElementById('map'), { // 지도를 표시할 div
-//         center : new kakao.maps.LatLng(36.2683, 127.6358), // 지도의 중심좌표 
-//         level : 14 // 지도의 확대 레벨 
-//     });
-// })
 
 </script>
 
@@ -92,10 +85,6 @@ const refreshImages = () => {
   <div>
 
   <MyMapSideBar @move-to-marker="onMoveToMarker" @refresh-attractions="fetchImage"/>
-
-  <!-- <div id="map" style="width:100%;height:350px;"></div> -->
-
-  
 
   <div class="container">
     <div class="col-md-12">
