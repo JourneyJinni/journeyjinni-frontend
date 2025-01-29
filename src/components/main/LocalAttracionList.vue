@@ -70,7 +70,7 @@ axios.get(VITE_VUE_API_URL)
       console.log(mainAttractionList)
     })
     .catch((error) => {
-      alert(error)
+      alert("불러오지못함! : " + error)
     })
 </script>
 <style scope>
