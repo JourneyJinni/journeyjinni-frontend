@@ -1,0 +1,67 @@
+name: Build and Push Docker Image to ACR
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:   # 수동 실행을 위한 트리거
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+        # ACR에 로그인 (CLI 환경은 사내에서 되지 않음)
+      - name: Log in to Azure
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{secrets.AZURE_URL}}
+          username: ${{secrets.AZURE_ID}}
+          password: ${{secrets.AZURE_PASSWORD}}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+
+       # 현재 시간 기준으로 태그 생성
+      - name: Generate tag based on current time
+        run: echo "IMAGE_TAG=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_ENV
+
+      - name: Build and push to ACR
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.AZURE_URL }}/jinni:front_${{ env.IMAGE_TAG }}
+          
+      # Kustomize 명령 가져오기
+      - name: Update kustomization.yaml with new image tag
+        uses: actions/checkout@v4
+        with: 
+          repository: JourneyJinni/gitops
+          ref: main
+          token: ${{ secrets.GIT_TOKEN }}
+          path: gitops
+
+      # 업데이트된 Kustomize 설정 적용
+      - name: Apply Kustomize resoureces
+        run: |
+          pwd
+          cd gitops/frontend/overlays/dev
+          kustomize edit set image ${{ secrets.AZURE_URL }}/jinni:front_${{ env.IMAGE_TAG }}
+          cat kustomization.yaml
+
+      # commit & push 설정
+      - name: Commit Manifest
+        run: |
+          cd gitops/backend/overlays/dev
+          git config --global user.name 'git-actions-bot'
+          git config --global user.email 'github-actions@users.noreply.github.com'
+          git add kustomization.yaml
+          git commit -m 'Update image tag from Github Action'
+          cat kustomization.yaml
+          git push origin HEAD
+
