@@ -70,6 +70,7 @@ axios.get(VITE_VUE_API_URL)
       console.log(mainAttractionList)
     })
     .catch((error) => {
+      console.log('VITE_VUE_API_URL:', import.meta.env.VITE_VUE_API_URL);
       alert("불러오지못함! : " + error)
     })
 </script>
