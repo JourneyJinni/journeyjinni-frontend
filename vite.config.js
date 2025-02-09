@@ -20,7 +20,7 @@ export default defineConfig({
     host: '0.0.0.0', // 모든 IP에서 접근 가능하게 함
     proxy: {
       '/api': {
-        target: 'http://57.155.17.41', // 백엔드 서버 주소
+        target: 'http://journeyjinni-backend.journeyjinni.svc.cluster.local:80', // 백엔드 서버 주소
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''), // 프록시 경로 재작성
       },
