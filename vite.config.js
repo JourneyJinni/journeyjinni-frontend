@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vite'
 import VueDevTools from 'vite-plugin-vue-devtools'
+const { VITE_VUE_API_URL } = import.meta.env;
 // https://vitejs.dev/config/
 
 
@@ -20,7 +21,7 @@ export default defineConfig({
     host: '0.0.0.0', // 모든 IP에서 접근 가능하게 함
     proxy: {
       '/api': {
-        target: 'http://journeyjinni-backend.journeyjinni.svc.cluster.local:80', // 백엔드 서버 주소
+        target: VITE_VUE_API_URL, // 백엔드 서버 주소
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''), // 프록시 경로 재작성
       },
